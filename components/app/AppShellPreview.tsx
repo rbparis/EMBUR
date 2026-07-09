@@ -6,19 +6,19 @@ import type { Lead } from "@/types";
 import Button from "@/components/ui/Button";
 import StatusBadge from "@/components/ui/StatusBadge";
 import WelcomeOverlay from "@/components/welcome/WelcomeOverlay";
-import Dashboard from "@/components/dashboard/Dashboard";
+import TodayOverview from "@/components/today/TodayOverview";
 
 export default function AppShellPreview() {
-  const [activePage, setActivePage] = useState("Dashboard");
+  const [activePage, setActivePage] = useState("Today");
   const [welcomeOpen, setWelcomeOpen] = useState(false);
   const [welcomeStep, setWelcomeStep] = useState(0);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
 
   const navItems = [
-    "🏠 Dashboard",
+    "🏠 Today",
     "👥 Customers",
     "💬 Conversations",
-    "📊 Reports",
+    "📈 Business",
     "⚙️ Settings",
   ];
 
@@ -80,7 +80,7 @@ export default function AppShellPreview() {
                 <h2 className="text-3xl font-bold">
                   {selectedLead
                     ? selectedLead.name
-                    : activePage === "Dashboard"
+                    : activePage === "Today"
                     ? "Good morning, Mike."
                     : activePage}
                 </h2>
@@ -104,14 +104,14 @@ export default function AppShellPreview() {
               />
             ) : (
               <>
-                {activePage === "Dashboard" && (
-                  <Dashboard onViewLeads={() => openPage("Customers")} />
+                {activePage === "Today" && (
+                  <TodayOverview onViewLeads={() => openPage("Customers")} />
                 )}
                 {activePage === "Customers" && (
                   <CustomersScreen selectLead={setSelectedLead} />
                 )}
                 {activePage === "Conversations" && <ConversationsScreen />}
-                {activePage === "Reports" && <ReportsScreen />}
+                {activePage === "Business" && <BusinessScreen />}
                 {activePage === "Settings" && <SettingsScreen />}
               </>
             )}
@@ -190,21 +190,18 @@ function LeadDetailScreen({
       </div>
 
       <div className="mt-8 rounded-2xl border p-6">
-        <h4 className="text-lg font-bold">Timeline</h4>
+        <h4 className="text-lg font-bold">Lead Intelligence</h4>
 
-        <div className="mt-5 space-y-4">
-          {[
-            "9:02 AM — Customer contacted business.",
-            "9:03 AM — EMBUR captured lead information.",
-            "9:04 AM — Office was notified automatically.",
-            "9:05 AM — Follow-up action was recommended.",
-          ].map((event) => (
-            <div key={event} className="flex gap-3">
-              <div className="mt-2 h-2 w-2 rounded-full bg-blue-600" />
-              <p className="text-slate-600">{event}</p>
-            </div>
-          ))}
+        <div className="mt-5 rounded-2xl bg-green-50 p-5">
+          <p className="text-sm font-semibold text-green-700">Lead Health</p>
+          <p className="mt-2 text-4xl font-bold text-green-800">98%</p>
+          <p className="mt-2 text-green-800">Likely to book today.</p>
         </div>
+
+        <p className="mt-5 text-slate-600">
+          Recommended action: call within 30 minutes. This customer has waited
+          11 hours and the issue is urgent.
+        </p>
       </div>
 
       <div className="mt-8 flex gap-4">
@@ -228,34 +225,20 @@ function ConversationsScreen() {
   return (
     <div className="mt-8 rounded-2xl border bg-white p-6">
       <h3 className="text-xl font-bold">Conversations</h3>
-
-      <div className="mt-6 space-y-4">
-        <div className="max-w-md rounded-2xl bg-slate-100 p-4">
-          My AC stopped working. Are you open?
-        </div>
-
-        <div className="ml-auto max-w-md rounded-2xl bg-blue-600 p-4 text-white">
-          I&apos;m sorry you&apos;re dealing with that. What&apos;s your address?
-        </div>
-
-        <div className="max-w-md rounded-2xl bg-slate-100 p-4">
-          123 Main Street.
-        </div>
-
-        <div className="ml-auto max-w-md rounded-2xl bg-blue-600 p-4 text-white">
-          Thank you. Your request was captured and the office has been notified.
-        </div>
-      </div>
+      <p className="mt-3 text-slate-600">
+        Conversations show how EMBUR captures customer details and keeps the
+        business moving.
+      </p>
     </div>
   );
 }
 
-function ReportsScreen() {
+function BusinessScreen() {
   return (
     <div className="mt-8 grid gap-6 md:grid-cols-3">
-      <Info label="Recovered This Month" value="$18,400" />
-      <Info label="Recovery Rate" value="81%" />
-      <Info label="Avg Response Time" value="18s" />
+      <Info label="Revenue Recovered" value="$18,400" />
+      <Info label="Time Returned" value="43 hours" />
+      <Info label="Appointments Saved" value="22" />
     </div>
   );
 }
