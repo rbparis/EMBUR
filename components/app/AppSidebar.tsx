@@ -1,3 +1,5 @@
+"use client";
+
 import EmburLogo from "@/components/brand/EmburLogo";
 import EmburIcon, {
   type EmburIconName,
@@ -31,7 +33,7 @@ export default function AppSidebar({
   onPageChange,
 }: AppSidebarProps) {
   return (
-    <aside className="flex flex-col bg-slate-950 p-5 text-white md:p-6">
+    <aside className="flex min-w-0 flex-col bg-slate-950 p-5 text-white md:p-6">
       <EmburLogo light />
 
       <nav
@@ -46,7 +48,8 @@ export default function AppSidebar({
               type="button"
               key={item.page}
               onClick={() => onPageChange(item.page)}
-              className={`flex shrink-0 items-center gap-3 rounded-xl px-4 py-3 text-left font-medium transition-all duration-200 lg:w-full ${
+              aria-current={isActive ? "page" : undefined}
+              className={`flex shrink-0 cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-left font-medium transition-all duration-200 lg:w-full ${
                 isActive
                   ? "bg-white text-slate-950 shadow-sm"
                   : "text-slate-300 hover:bg-white/10 hover:text-white"

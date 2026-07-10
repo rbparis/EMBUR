@@ -20,6 +20,7 @@ export default function AppShellPreview() {
     setActivePage(page);
     setSelectedLead(null);
     setWelcomeOpen(false);
+    setWelcomeStep(0);
   }
 
   function openWelcomeExperience() {
@@ -123,17 +124,15 @@ function CustomersScreen({
 }) {
   return (
     <section className="mt-8 rounded-3xl border bg-white p-5 shadow-sm md:p-6">
-      <div>
-        <p className="text-sm font-bold uppercase tracking-wider text-blue-700">
-          Customer opportunities
-        </p>
+      <p className="text-sm font-bold uppercase tracking-wider text-blue-700">
+        Customer opportunities
+      </p>
 
-        <h3 className="mt-2 text-2xl font-bold">People waiting for help</h3>
+      <h3 className="mt-2 text-2xl font-bold">People waiting for help</h3>
 
-        <p className="mt-2 text-slate-500">
-          Open a customer to see what happened and what deserves attention.
-        </p>
-      </div>
+      <p className="mt-2 text-slate-500">
+        Open a customer to see what happened and what deserves attention.
+      </p>
 
       <div className="mt-6 space-y-4">
         {leads.map((lead) => (
@@ -141,7 +140,7 @@ function CustomersScreen({
             type="button"
             key={lead.id}
             onClick={() => selectLead(lead)}
-            className="group w-full rounded-2xl border border-transparent bg-slate-50 p-5 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:bg-white hover:shadow-md"
+            className="group w-full cursor-pointer rounded-2xl border border-transparent bg-slate-50 p-5 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:bg-white hover:shadow-md"
           >
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -277,7 +276,6 @@ function Info({ label, value }: { label: string; value: string }) {
 function ConversationsScreen() {
   return (
     <EmptyState
-      icon="conversations"
       title="You're all caught up."
       description="New customer conversations will appear here automatically when EMBUR begins responding."
     />
@@ -355,11 +353,9 @@ function SettingsScreen() {
 }
 
 function EmptyState({
-  icon,
   title,
   description,
 }: {
-  icon: "conversations";
   title: string;
   description: string;
 }) {
@@ -367,7 +363,7 @@ function EmptyState({
     <section className="mt-8 flex min-h-96 items-center justify-center rounded-3xl border bg-white p-8 text-center shadow-sm">
       <div className="max-w-md">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-          <EmburIcon name={icon} size={26} />
+          <EmburIcon name="conversations" size={26} />
         </div>
 
         <h3 className="mt-5 text-2xl font-bold">{title}</h3>
