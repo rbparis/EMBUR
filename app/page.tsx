@@ -3,6 +3,7 @@ import DashboardPreview from "@/components/DashboardPreview";
 import ConversationPreview from "@/components/ConversationPreview";
 import LeadDetailPreview from "@/components/LeadDetailPreview";
 import AppShellPreview from "@/components/app/AppShellPreview";
+import GetMyTimeBack from "@/components/journey/GetMyTimeBack";
 
 export default function Home() {
   return (
@@ -22,16 +23,19 @@ export default function Home() {
             Features
           </a>
           <a href="#dashboard" className="hover:text-blue-700 transition">
-            Dashboard
+            Today
           </a>
-          <a href="#pricing" className="hover:text-blue-700 transition">
-            Pricing
+          <a href="#time-back" className="hover:text-blue-700 transition">
+            Get Time Back
           </a>
         </div>
 
-        <button className="rounded-lg bg-blue-600 px-5 py-3 text-white hover:bg-blue-700 transition">
-          Book a Demo
-        </button>
+        <a
+          href="#time-back"
+          className="rounded-lg bg-blue-600 px-5 py-3 text-white hover:bg-blue-700 transition"
+        >
+          Get My Time Back
+        </a>
       </nav>
 
       <section className="max-w-6xl mx-auto px-8 py-20 text-center">
@@ -42,17 +46,22 @@ export default function Home() {
         </h2>
 
         <p className="mt-8 text-xl text-slate-600 max-w-3xl mx-auto">
-          Never lose another lead because someone missed the phone. EMBUR
-          follows up automatically, captures customer information, and keeps
-          your schedule full.
+          EMBUR helps local service businesses recover missed opportunities,
+          organize priorities, and give owners more time back.
         </p>
 
-        <button className="mt-10 rounded-xl bg-blue-600 px-8 py-4 text-lg font-semibold text-white hover:bg-blue-700 transition">
-          Book Your Free Demo
-        </button>
+        <a
+          href="#time-back"
+          className="mt-10 inline-block rounded-xl bg-blue-600 px-8 py-4 text-lg font-semibold text-white hover:bg-blue-700 transition"
+        >
+          Get My Time Back
+        </a>
       </section>
 
-      <AppShellPreview />
+      <section id="dashboard">
+        <AppShellPreview />
+      </section>
+
       <MorningBrief />
       <DashboardPreview />
       <ConversationPreview />
@@ -60,15 +69,15 @@ export default function Home() {
 
       <section id="features" className="max-w-6xl mx-auto px-8 py-20">
         <h3 className="text-3xl font-bold text-center mb-12">
-          See EMBUR in Action
+          Built to return time to the owner.
         </h3>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {[
-            "Missed Call Recovery",
-            "Instant Follow-Ups",
-            "Lead Dashboard",
-            "Review Requests",
+            "Recover Missed Calls",
+            "Organize Priorities",
+            "Book More Jobs",
+            "Return Time",
           ].map((feature) => (
             <div
               key={feature}
@@ -80,8 +89,10 @@ export default function Home() {
         </div>
       </section>
 
+      <GetMyTimeBack />
+
       <footer className="border-t py-10 text-center text-slate-500">
-        © {new Date().getFullYear()} EMBUR. Built for HVAC companies.
+        © {new Date().getFullYear()} EMBUR. Built for local service businesses.
       </footer>
     </main>
   );
