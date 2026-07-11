@@ -10,3 +10,6 @@ export function getCustomerById(
 ): Lead | undefined {
   return leads.find((lead) => lead.id === customerId);
 }
+export function getHighestPriorityLead() {
+  return getCustomers()[0];
+}
