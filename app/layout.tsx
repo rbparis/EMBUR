@@ -1,9 +1,33 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import SkipLink from "@/components/ui/SkipLink";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "EMBUR",
-  description: "Returning time to local service business owners.",
+  title: {
+    default: "EMBUR — Get Your Time Back",
+    template: "%s | EMBUR",
+  },
+  description:
+    "EMBUR helps local service businesses recover missed opportunities, organize priorities, and return time to the owner.",
+  applicationName: "EMBUR",
+  keywords: [
+    "local service business",
+    "missed call recovery",
+    "customer follow-up",
+    "business operations",
+    "time returned",
+    "HVAC software",
+  ],
+  icons: {
+    icon: "/embur-logo.png",
+    apple: "/embur-logo.png",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#020617",
 };
 
 export default function RootLayout({
@@ -13,7 +37,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SkipLink />
+        {children}
+      </body>
     </html>
   );
 }
