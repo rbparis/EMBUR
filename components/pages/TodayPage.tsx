@@ -5,7 +5,7 @@ import BusinessPulse from "@/components/morning/BusinessPulse";
 import OnePriorityCard from "@/components/morning/OnePriorityCard";
 import TimeLedger from "@/components/morning/TimeLedger";
 import { getMorningBrief } from "@/services/morningService";
-import { getCustomers } from "@/services/customerService";
+import { findAllCustomers } from "@/repositories/customerRepository";
 import {
   getHighestPriorityCustomer,
   type PriorityCustomer,
@@ -19,7 +19,7 @@ export default function TodayPage({
   onOpenCustomer,
 }: TodayPageProps) {
   const brief = getMorningBrief();
-  const customers = getCustomers();
+  const customers = findAllCustomers();
   const priority = getHighestPriorityCustomer(customers);
 
   function handleOpenPriority(
@@ -37,7 +37,7 @@ export default function TodayPage({
         onOpenCustomer={handleOpenPriority}
       />
       <BusinessPulse />
-      
+
       <MorningMetrics metrics={brief.metrics} />
 
       <TimeLedger />
