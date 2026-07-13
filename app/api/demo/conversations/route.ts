@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { findDemoConversationCustomers } from "@/repositories/conversationRepository";
+import { auth } from "@clerk/nextjs/server";
 
 function formatMessageTime(date: Date) {
   return new Intl.DateTimeFormat("en-US", {
@@ -9,6 +10,8 @@ function formatMessageTime(date: Date) {
 }
 
 export async function GET() {
+  await auth.protect();
+
   try {
     const customers = await findDemoConversationCustomers();
 

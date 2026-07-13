@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-
+import { auth } from "@clerk/nextjs/server";
 const demoBusinessId = "business-embur-demo";
 
 function formatOpportunityValue(value: number | null) {
@@ -14,6 +14,8 @@ function formatOpportunityValue(value: number | null) {
 }
 
 export async function GET() {
+  await auth.protect();
+
   try {
     const customers = await prisma.customer.findMany({
       where: {

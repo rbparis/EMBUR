@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import SkipLink from "@/components/ui/SkipLink";
 import "./globals.css";
 
@@ -36,10 +37,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+    >
       <body>
-        <SkipLink />
-        {children}
+        <ClerkProvider>
+          <SkipLink />
+          {children}
+        </ClerkProvider>
       </body>
     </html>
   );

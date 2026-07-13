@@ -1,6 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import {
+  Show,
+  UserButton,
+} from "@clerk/nextjs";
 import EmburLogo from "@/components/brand/EmburLogo";
 
 const navigation = [
@@ -52,20 +57,49 @@ export default function SiteHeader() {
           ))}
         </nav>
 
-        <a
-          href="#time-back"
-          className="hidden items-center justify-center rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md md:inline-flex"
-        >
-          Get My Time Back
-        </a>
+        <div className="hidden items-center gap-3 md:flex">
+          <Show when="signed-out">
+            <Link
+              href="/sign-in"
+              className="rounded-xl px-4 py-3 font-semibold text-slate-700 transition hover:bg-white"
+            >
+              Sign In
+            </Link>
+
+            <Link
+              href="/sign-up"
+              className="rounded-xl bg-blue-600 px-5 py-3 font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md"
+            >
+              Create Account
+            </Link>
+          </Show>
+
+          <Show when="signed-in">
+            <Link
+              href="/app"
+              prefetch={false}
+              className="rounded-xl bg-blue-600 px-5 py-3 font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700"
+            >
+              Open Workspace
+            </Link>
+
+            <UserButton />
+          </Show>
+        </div>
 
         <div className="relative md:hidden">
           <button
             type="button"
             aria-expanded={menuOpen}
             aria-controls="mobile-navigation"
-            aria-label={menuOpen ? "Close navigation" : "Open navigation"}
-            onClick={() => setMenuOpen((current) => !current)}
+            aria-label={
+              menuOpen
+                ? "Close navigation"
+                : "Open navigation"
+            }
+            onClick={() =>
+              setMenuOpen((current) => !current)
+            }
             className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-950 shadow-sm transition hover:bg-slate-50"
           >
             <span className="sr-only">
@@ -75,19 +109,25 @@ export default function SiteHeader() {
             <span className="relative block h-5 w-5">
               <span
                 className={`absolute left-0 top-1 h-0.5 w-5 rounded-full bg-current transition ${
-                  menuOpen ? "translate-y-1.5 rotate-45" : ""
+                  menuOpen
+                    ? "translate-y-1.5 rotate-45"
+                    : ""
                 }`}
               />
 
               <span
                 className={`absolute left-0 top-2.5 h-0.5 w-5 rounded-full bg-current transition ${
-                  menuOpen ? "opacity-0" : "opacity-100"
+                  menuOpen
+                    ? "opacity-0"
+                    : "opacity-100"
                 }`}
               />
 
               <span
                 className={`absolute left-0 top-4 h-0.5 w-5 rounded-full bg-current transition ${
-                  menuOpen ? "-translate-y-1.5 -rotate-45" : ""
+                  menuOpen
+                    ? "-translate-y-1.5 -rotate-45"
+                    : ""
                 }`}
               />
             </span>
@@ -121,13 +161,38 @@ export default function SiteHeader() {
                     </a>
                   ))}
 
-                  <a
-                    href="#time-back"
-                    onClick={closeMenu}
-                    className="mt-2 rounded-xl bg-blue-600 px-4 py-3 text-center font-bold text-white transition hover:bg-blue-700"
-                  >
-                    Get My Time Back
-                  </a>
+                  <Show when="signed-out">
+                    <Link
+                      href="/sign-in"
+                      onClick={closeMenu}
+                      className="mt-2 rounded-xl border border-slate-200 px-4 py-3 text-center font-bold text-slate-700"
+                    >
+                      Sign In
+                    </Link>
+
+                    <Link
+                      href="/sign-up"
+                      onClick={closeMenu}
+                      className="rounded-xl bg-blue-600 px-4 py-3 text-center font-bold text-white"
+                    >
+                      Create Account
+                    </Link>
+                  </Show>
+
+                  <Show when="signed-in">
+                    <Link
+                      href="/app"
+                      prefetch={false}
+                      onClick={closeMenu}
+                      className="mt-2 rounded-xl bg-blue-600 px-4 py-3 text-center font-bold text-white"
+                    >
+                      Open Workspace
+                    </Link>
+
+                    <div className="flex justify-center py-3">
+                      <UserButton />
+                    </div>
+                  </Show>
                 </nav>
               </div>
             </>
