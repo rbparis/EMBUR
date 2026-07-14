@@ -50,7 +50,7 @@ export default async function EmburWorkspacePage() {
             href="/"
             className="mt-8 inline-block text-sm font-semibold text-blue-700 hover:text-blue-800"
           >
-            Return to the public website
+            Return to the EMBUR website
           </Link>
         </section>
       </main>
@@ -66,8 +66,8 @@ export default async function EmburWorkspacePage() {
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-4 md:px-8">
           <div className="flex items-center gap-4">
             <Link
-              href="/"
-              aria-label="Return to the EMBUR website"
+              href="/app"
+              aria-label="Return to Today"
             >
               <EmburLogo size="small" />
             </Link>
@@ -85,14 +85,6 @@ export default async function EmburWorkspacePage() {
 
           <div className="flex items-center gap-3">
             <OrganizationSwitcher />
-
-            <Link
-              href="/"
-              className="hidden text-sm font-semibold text-slate-600 transition hover:text-blue-700 lg:block"
-            >
-              Public website
-            </Link>
-
             <UserButton />
           </div>
         </div>
