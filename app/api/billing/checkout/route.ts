@@ -5,8 +5,24 @@ import {
 } from "@clerk/nextjs/server";
 import { stripe } from "@/lib/stripe";
 import { getOrCreateBusinessForOrganization } from "@/lib/currentBusiness";
+import {
+  billingPlans,
+  isBillingPlanId,
+} from "@/lib/billing/plans";
 
-export async function POST() {
+function getStripePriceId(
+  planId: keyof typeof billingPlans
+) {
+  const priceIds = {
+    pro: process.env.STRIPE_PRO_PRICE_ID,
+    growth: process.env.STRIPE_GROWTH_PRICE_ID,
+    elite: process.env.STRIPE_ELITE_PRICE_ID,
+  };
+
+  return priceIds[planId];
+}
+
+export async function POST(request: Request) {
   const {
     isAuthenticated,
     orgId,
@@ -37,7 +53,27 @@ export async function POST() {
     );
   }
 
-  const priceId = process.env.STRIPE_PRICE_ID;
+  const body = (await request.json()) as {
+    planId?: string;
+  };
+
+  if (
+    !body.planId ||
+    !isBillingPlanId(body.planId)
+  ) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Select a valid EMBUR plan.",
+      },
+      {
+        status: 400,
+      }
+    );
+  }
+
+  const plan = billingPlans[body.planId];
+  const priceId = getStripePriceId(body.planId);
   const appUrl = process.env.APP_URL;
 
   if (!priceId || !appUrl) {
@@ -45,7 +81,7 @@ export async function POST() {
       {
         success: false,
         message:
-          "Stripe billing has not been configured.",
+          `${plan.name} has not been configured in Stripe.`,
       },
       {
         status: 500,
@@ -55,7 +91,9 @@ export async function POST() {
 
   try {
     const business =
-      await getOrCreateBusinessForOrganization(orgId);
+      await getOrCreateBusinessForOrganization(
+        orgId
+      );
 
     const user = await currentUser();
 
@@ -78,7 +116,8 @@ export async function POST() {
           "?session_id={CHECKOUT_SESSION_ID}",
 
         cancel_url:
-          `${appUrl}/app/billing?canceled=true`,
+          `${appUrl}/app/billing` +
+          `?plan=${body.planId}&canceled=true`,
 
         client_reference_id: business.id,
 
@@ -87,12 +126,16 @@ export async function POST() {
         metadata: {
           businessId: business.id,
           clerkOrganizationId: orgId,
+          planId: body.planId,
+          planName: plan.name,
         },
 
         subscription_data: {
           metadata: {
             businessId: business.id,
             clerkOrganizationId: orgId,
+            planId: body.planId,
+            planName: plan.name,
           },
         },
 

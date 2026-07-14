@@ -1,11 +1,26 @@
 "use client";
 
 import { useState } from "react";
+import type { BillingPlanId } from "@/lib/billing/plans";
 
-export default function SubscribeButton() {
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] =
-    useState<string | null>(null);
+type SubscribeButtonProps = {
+  planId: BillingPlanId;
+  planName: string;
+  price: number;
+};
+
+export default function SubscribeButton({
+  planId,
+  planName,
+  price,
+}: SubscribeButtonProps) {
+  const [loading, setLoading] =
+    useState(false);
+
+  const [
+    errorMessage,
+    setErrorMessage,
+  ] = useState<string | null>(null);
 
   async function startCheckout() {
     setLoading(true);
@@ -18,7 +33,11 @@ export default function SubscribeButton() {
           method: "POST",
           headers: {
             Accept: "application/json",
+            "Content-Type": "application/json",
           },
+          body: JSON.stringify({
+            planId,
+          }),
         }
       );
 
@@ -61,7 +80,7 @@ export default function SubscribeButton() {
       >
         {loading
           ? "Opening secure checkout..."
-          : "Start EMBUR Pro — $99/month"}
+          : `Choose ${planName} — $${price}/month`}
       </button>
 
       {errorMessage && (
