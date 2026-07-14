@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   useEffect,
   useState,
@@ -352,12 +353,45 @@ export default function AppShellPreview() {
 
                 {activePage ===
                   "Settings" && (
-                  <SettingsPage />
+                  <div className="space-y-6">
+                    <SettingsPage />
+                    <BillingSettingsCard />
+                  </div>
                 )}
               </>
             )}
           </main>
         </div>
+      </div>
+    </section>
+  );
+}
+
+function BillingSettingsCard() {
+  return (
+    <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="text-sm font-bold uppercase tracking-[0.18em] text-orange-600">
+            Subscription
+          </p>
+
+          <h3 className="mt-3 text-2xl font-bold tracking-tight text-slate-950">
+            Billing and plan
+          </h3>
+
+          <p className="mt-3 max-w-2xl leading-relaxed text-slate-600">
+            Review your EMBUR plan, begin a subscription,
+            or manage your company&apos;s billing settings.
+          </p>
+        </div>
+
+        <Link
+          href="/app/billing"
+          className="inline-flex shrink-0 items-center justify-center rounded-xl bg-blue-600 px-6 py-4 font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md"
+        >
+          Manage Billing →
+        </Link>
       </div>
     </section>
   );
