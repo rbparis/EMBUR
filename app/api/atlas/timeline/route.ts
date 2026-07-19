@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { getOrCreateBusinessForOrganization } from "@/lib/currentBusiness";
+import { getOrCreateBusinessForUser } from "@/lib/currentBusiness";
 
 export const runtime = "nodejs";
 
@@ -22,7 +22,7 @@ type TimelineItem = {
 export async function GET() {
   const {
     isAuthenticated,
-    orgId,
+    userId,
   } = await auth();
 
   if (!isAuthenticated) {
@@ -37,12 +37,12 @@ export async function GET() {
     );
   }
 
-  if (!orgId) {
+  if (!userId) {
     return NextResponse.json(
       {
         success: false,
         message:
-          "Select a company before loading the Atlas timeline.",
+          "Sign in before loading the Atlas timeline.",
       },
       {
         status: 409,
@@ -52,8 +52,8 @@ export async function GET() {
 
   try {
     const business =
-      await getOrCreateBusinessForOrganization(
-        orgId
+      await getOrCreateBusinessForUser(
+        userId
       );
 
     const [

@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { getOrCreateBusinessForOrganization } from "@/lib/currentBusiness";
+import { getOrCreateBusinessForUser } from "@/lib/currentBusiness";
 import { normalizeAtlasMemory } from "@/lib/intelligence/memory/memoryEngine";
 import type { AtlasMemory } from "@/lib/intelligence/memory/types";
 
 async function getAuthenticatedBusiness() {
   const {
     isAuthenticated,
-    orgId,
+    userId,
   } = await auth();
 
   if (!isAuthenticated) {
@@ -25,13 +25,13 @@ async function getAuthenticatedBusiness() {
     };
   }
 
-  if (!orgId) {
+  if (!userId) {
     return {
       error: NextResponse.json(
         {
           success: false,
           message:
-            "Select a company before using Atlas Memory.",
+            "Sign in before using Atlas Memory.",
         },
         {
           status: 409,
@@ -41,7 +41,7 @@ async function getAuthenticatedBusiness() {
   }
 
   const business =
-    await getOrCreateBusinessForOrganization(orgId);
+    await getOrCreateBusinessForUser(userId);
 
   return {
     business,

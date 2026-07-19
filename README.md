@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EMBUR
 
-## Getting Started
+The operating system for local service businesses. EMBUR recovers opportunities, organizes customer work, and tells the owner what to do next.
 
-First, run the development server:
+## Local setup
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```powershell
+copy .env.example .env
+npm.cmd ci
+npx.cmd prisma generate
+npx.cmd prisma migrate dev
+npm.cmd run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Verification
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```powershell
+npx.cmd tsc --noEmit
+npm.cmd run lint
+npm.cmd run build
+```
 
-## Learn More
+## Product areas
 
-To learn more about Next.js, take a look at the following resources:
+- `/` — public website and time-return experience
+- `/app` — authenticated EMBUR workspace
+- `/app/billing` — subscription plans
+- `/api/health` — production health check
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Architecture
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Next.js App Router
+- React 19
+- Clerk authentication and organizations
+- Prisma data layer
+- Stripe billing
+- Atlas rules engine with optional OpenAI enhancement
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See `docs/EMBUR_V1_RELEASE.md` for release scope and production requirements.

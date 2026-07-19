@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { getOrCreateBusinessForOrganization } from "@/lib/currentBusiness";
+import { getOrCreateBusinessForUser } from "@/lib/currentBusiness";
 import { findConversationCustomersForBusiness } from "@/repositories/conversationRepository";
 
 function formatMessageTime(date: Date) {
@@ -13,7 +13,7 @@ function formatMessageTime(date: Date) {
 export async function GET() {
   const {
     isAuthenticated,
-    orgId,
+    userId,
   } = await auth();
 
   if (!isAuthenticated) {
@@ -30,14 +30,14 @@ export async function GET() {
     );
   }
 
-  if (!orgId) {
+  if (!userId) {
     return NextResponse.json(
       {
         success: false,
         source: "prisma",
         threads: [],
         message:
-          "Select a company before loading conversations.",
+          "Sign in before loading conversations.",
       },
       {
         status: 409,
@@ -47,7 +47,7 @@ export async function GET() {
 
   try {
     const business =
-      await getOrCreateBusinessForOrganization(orgId);
+      await getOrCreateBusinessForUser(userId);
 
     const customers =
       await findConversationCustomersForBusiness(

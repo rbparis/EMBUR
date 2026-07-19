@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { getOrCreateBusinessForOrganization } from "@/lib/currentBusiness";
+import { getOrCreateBusinessForUser } from "@/lib/currentBusiness";
 
 type AtlasActionStatus =
   | "pending"
@@ -32,7 +32,7 @@ function isActionStatus(
 async function getBusiness() {
   const {
     isAuthenticated,
-    orgId,
+    userId,
   } = await auth();
 
   if (!isAuthenticated) {
@@ -49,13 +49,13 @@ async function getBusiness() {
     };
   }
 
-  if (!orgId) {
+  if (!userId) {
     return {
       error: NextResponse.json(
         {
           success: false,
           message:
-            "Select a company before using Atlas Actions.",
+            "Sign in before using Atlas Actions.",
         },
         {
           status: 409,
@@ -65,7 +65,7 @@ async function getBusiness() {
   }
 
   const business =
-    await getOrCreateBusinessForOrganization(orgId);
+    await getOrCreateBusinessForUser(userId);
 
   return {
     business,

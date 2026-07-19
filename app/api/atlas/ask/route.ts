@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   try {
     const {
       isAuthenticated,
-      orgId,
+      userId,
     } = await auth();
 
     if (!isAuthenticated) {
@@ -32,12 +32,12 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!orgId) {
+    if (!userId) {
       return NextResponse.json(
         {
           success: false,
           message:
-            "Select a company before asking Atlas.",
+            "Sign in before asking Atlas.",
         },
         {
           status: 409,

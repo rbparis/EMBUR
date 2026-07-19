@@ -2,129 +2,70 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 
 const demoBusinessId = "business-embur-demo";
+const demoOwnerId = "user-mike-owner";
 
-export async function getOrCreateBusinessForOrganization(
-  clerkOrganizationId: string
-) {
-  const linkedBusiness = await prisma.business.findUnique({
-    where: {
-      clerkOrganizationId,
-    },
-    include: {
-      _count: {
-        select: {
-          users: true,
-          customers: true,
-          conversations: true,
-        },
-      },
-    },
+function userDisplayName(user: { firstName: string | null; lastName: string | null; username: string | null }) {
+  const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ").trim();
+  return fullName || user.username || "Business Owner";
+}
+
+export async function getOrCreateBusinessForUser(clerkUserId: string) {
+  const existingUser = await prisma.user.findUnique({
+    where: { clerkUserId },
+    include: { business: true },
   });
 
-  const demoBusiness = await prisma.business.findUnique({
-    where: {
-      id: demoBusinessId,
-    },
-    include: {
-      _count: {
-        select: {
-          users: true,
-          customers: true,
-          conversations: true,
-        },
-      },
-    },
-  });
-
-  /*
-   * If the correct seeded business is already connected,
-   * no repair is needed.
-   */
-  if (
-    linkedBusiness &&
-    linkedBusiness.id === demoBusinessId
-  ) {
-    return linkedBusiness;
-  }
-
-  /*
-   * During local development, connect the active Clerk
-   * company to the seeded business containing our demo data.
-   */
-  if (
-    demoBusiness &&
-    demoBusiness._count.customers > 0
-  ) {
-    return prisma.$transaction(async (transaction) => {
-      /*
-       * Release the active organization ID from the accidental
-       * empty Business record.
-       */
-      if (linkedBusiness) {
-        if (
-          linkedBusiness._count.users === 0 &&
-          linkedBusiness._count.customers === 0 &&
-          linkedBusiness._count.conversations === 0
-        ) {
-          await transaction.business.delete({
-            where: {
-              id: linkedBusiness.id,
-            },
-          });
-        } else {
-          await transaction.business.update({
-            where: {
-              id: linkedBusiness.id,
-            },
-            data: {
-              clerkOrganizationId: null,
-            },
-          });
-        }
-      }
-
-      /*
-       * Clear any stale Clerk organization mapping from the
-       * seeded business before assigning the active one.
-       */
-      await transaction.business.update({
-        where: {
-          id: demoBusinessId,
-        },
-        data: {
-          clerkOrganizationId: null,
-        },
-      });
-
-      return transaction.business.update({
-        where: {
-          id: demoBusinessId,
-        },
-        data: {
-          clerkOrganizationId,
-        },
-      });
-    });
-  }
-
-  /*
-   * Normal production behavior for a genuinely new company.
-   */
-  if (linkedBusiness) {
-    return linkedBusiness;
+  if (existingUser) {
+    return existingUser.business;
   }
 
   const client = await clerkClient();
+  const clerkUser = await client.users.getUser(clerkUserId);
+  const email = clerkUser.primaryEmailAddress?.emailAddress?.trim().toLowerCase();
 
-  const organization =
-    await client.organizations.getOrganization({
-      organizationId: clerkOrganizationId,
+  if (!email) {
+    throw new Error("Your Clerk account needs a primary email address before EMBUR can create a workspace.");
+  }
+
+  const name = userDisplayName(clerkUser);
+
+  const emailUser = await prisma.user.findUnique({
+    where: { email },
+    include: { business: true },
+  });
+
+  if (emailUser) {
+    await prisma.user.update({
+      where: { id: emailUser.id },
+      data: { clerkUserId, name },
     });
+    return emailUser.business;
+  }
+
+  const demoBusiness = await prisma.business.findUnique({
+    where: { id: demoBusinessId },
+    include: {
+      users: true,
+      _count: { select: { customers: true } },
+    },
+  });
+
+  const demoOwner = demoBusiness?.users.find((user) => user.id === demoOwnerId);
+
+  if (demoBusiness && demoBusiness._count.customers > 0 && demoOwner && !demoOwner.clerkUserId) {
+    await prisma.user.update({
+      where: { id: demoOwner.id },
+      data: { clerkUserId, name, email },
+    });
+    return demoBusiness;
+  }
 
   return prisma.business.create({
     data: {
-      clerkOrganizationId,
-      name: organization.name,
+      name: `${name}'s Business`,
+      users: {
+        create: { clerkUserId, name, email, role: "owner" },
+      },
     },
   });
 }

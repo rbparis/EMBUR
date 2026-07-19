@@ -4,7 +4,7 @@ import {
   currentUser,
 } from "@clerk/nextjs/server";
 import { stripe } from "@/lib/stripe";
-import { getOrCreateBusinessForOrganization } from "@/lib/currentBusiness";
+import { getOrCreateBusinessForUser } from "@/lib/currentBusiness";
 import {
   billingPlans,
   isBillingPlanId,
@@ -25,7 +25,7 @@ function getStripePriceId(
 export async function POST(request: Request) {
   const {
     isAuthenticated,
-    orgId,
+    userId,
   } = await auth();
 
   if (!isAuthenticated) {
@@ -40,12 +40,12 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!orgId) {
+  if (!userId) {
     return NextResponse.json(
       {
         success: false,
         message:
-          "Select a company before starting billing.",
+          "Sign in before starting billing.",
       },
       {
         status: 409,
@@ -91,8 +91,8 @@ export async function POST(request: Request) {
 
   try {
     const business =
-      await getOrCreateBusinessForOrganization(
-        orgId
+      await getOrCreateBusinessForUser(
+        userId
       );
 
     const user = await currentUser();
@@ -125,7 +125,7 @@ export async function POST(request: Request) {
 
         metadata: {
           businessId: business.id,
-          clerkOrganizationId: orgId,
+          clerkUserId: userId,
           planId: body.planId,
           planName: plan.name,
         },
@@ -133,7 +133,7 @@ export async function POST(request: Request) {
         subscription_data: {
           metadata: {
             businessId: business.id,
-            clerkOrganizationId: orgId,
+            clerkUserId: userId,
             planId: body.planId,
             planName: plan.name,
           },

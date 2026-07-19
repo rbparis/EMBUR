@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import SubscribeButton from "@/components/billing/SubscribeButton";
 import EmburLogo from "@/components/brand/EmburLogo";
-import { getOrCreateBusinessForOrganization } from "@/lib/currentBusiness";
+import { getOrCreateBusinessForUser } from "@/lib/currentBusiness";
 import {
   billingPlans,
   isBillingPlanId,
@@ -20,26 +21,19 @@ export default async function BillingPage({
 }: BillingPageProps) {
   const {
     isAuthenticated,
-    orgId,
-    redirectToSignIn,
+    userId,
   } = await auth();
 
   if (!isAuthenticated) {
-    return redirectToSignIn();
+    redirect("/sign-in?redirect_url=%2Fapp%2Fbilling");
   }
 
-  if (!orgId) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-100 p-6">
-        <p className="font-semibold text-slate-700">
-          Select a company before opening billing.
-        </p>
-      </main>
-    );
+  if (!userId) {
+    redirect("/sign-in?redirect_url=%2Fapp%2Fbilling");
   }
 
   const business =
-    await getOrCreateBusinessForOrganization(orgId);
+    await getOrCreateBusinessForUser(userId);
 
   const {
     plan: requestedPlan,
