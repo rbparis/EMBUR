@@ -17,6 +17,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Run hosted-sales heartbeat
+        shell: bash
+        env:
+          EMBUR_CRON_SECRET: ${{ secrets.EMBUR_CRON_SECRET }}
+        run: |
+          set -euo pipefail
+          test -n "$EMBUR_CRON_SECRET"
+          curl --fail --silent --show-error \
+            --connect-timeout 10 \
+            --max-time 60 \
+            --retry 2 \
+            --retry-all-errors \
+            -H "Authorization: Bearer $EMBUR_CRON_SECRET" \
+            https://getembur.com/api/hosted-sales/dispatch >/dev/null
       - name: Verify EMBUR production readiness
         shell: bash
         run: |
