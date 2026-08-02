@@ -3,20 +3,29 @@ import {
   auth,
   currentUser,
 } from "@clerk/nextjs/server";
-import { stripe } from "@/lib/stripe";
-import { getOrCreateBusinessForUser } from "@/lib/currentBusiness";
+import { getStripe } from "@/lib/stripe";
+import { getClientWorkspaceForUser } from "@/lib/clientWorkspace.server";
 import {
   billingPlans,
   isBillingPlanId,
 } from "@/lib/billing/plans";
+import { metricEventKey, recordMetricEvent } from "@/lib/metrics.server";
 
 function getStripePriceId(
   planId: keyof typeof billingPlans
 ) {
   const priceIds = {
-    pro: process.env.STRIPE_PRO_PRICE_ID,
-    growth: process.env.STRIPE_GROWTH_PRICE_ID,
-    elite: process.env.STRIPE_ELITE_PRICE_ID,
+    copper:
+      process.env.STRIPE_COPPER_PRICE_ID ??
+      process.env.STRIPE_PRO_PRICE_ID,
+    silver:
+      process.env.STRIPE_SILVER_PRICE_ID ??
+      process.env.STRIPE_GROWTH_PRICE_ID,
+    gold:
+      process.env.STRIPE_GOLD_PRICE_ID ??
+      process.env.STRIPE_ELITE_PRICE_ID,
+    diamond: process.env.STRIPE_DIAMOND_PRICE_ID,
+    platinum: process.env.STRIPE_PLATINUM_PRICE_ID,
   };
 
   return priceIds[planId];
@@ -81,7 +90,7 @@ export async function POST(request: Request) {
       {
         success: false,
         message:
-          `${plan.name} has not been configured in Stripe.`,
+          `${plan.name} has not been configured in Stripe yet.`,
       },
       {
         status: 500,
@@ -90,10 +99,9 @@ export async function POST(request: Request) {
   }
 
   try {
-    const business =
-      await getOrCreateBusinessForUser(
-        userId
-      );
+    const stripe = getStripe();
+
+    const { business, mode } = await getClientWorkspaceForUser(userId);
 
     const user = await currentUser();
 
@@ -125,17 +133,13 @@ export async function POST(request: Request) {
 
         metadata: {
           businessId: business.id,
-          clerkUserId: userId,
           planId: body.planId,
-          planName: plan.name,
         },
 
         subscription_data: {
           metadata: {
             businessId: business.id,
-            clerkUserId: userId,
             planId: body.planId,
-            planName: plan.name,
           },
         },
 
@@ -147,6 +151,16 @@ export async function POST(request: Request) {
         "Stripe did not return a Checkout URL."
       );
     }
+
+    await recordMetricEvent({
+      tenantId: business.id,
+      accountMode: mode,
+      externalId: metricEventKey("checkout_start", session.id),
+      event: "checkout_start",
+      source: "stripe_checkout",
+      path: "/app/billing",
+      metadata: { planId: body.planId },
+    });
 
     return NextResponse.json({
       success: true,

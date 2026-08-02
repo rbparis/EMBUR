@@ -5,31 +5,30 @@ import {
 } from "@/lib/billing/plans";
 
 const featuredPlanId: BillingPlanId =
-  "growth";
+  "platinum";
 
 export default function InvestmentCard() {
   return (
     <section
       id="investment"
-      className="bg-white py-20 md:py-28"
+      className="bg-[#eef3fb] py-24 md:py-32"
     >
       <div className="mx-auto max-w-7xl px-5 md:px-8">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-bold uppercase tracking-[0.18em] text-blue-700">
-            Simple monthly plans
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#1555c6]">
+            Plans
           </p>
 
-          <h2 className="mt-4 text-4xl font-bold tracking-tight text-slate-950 md:text-5xl">
-            Choose how much time EMBUR gives back.
+          <h2 className="font-display mt-5 text-4xl font-semibold tracking-[-0.04em] text-[#06142f] md:text-6xl">
+            Start with the agents you need.
           </h2>
 
-          <p className="mt-5 text-lg leading-relaxed text-slate-600">
-            Start with what your business needs today.
-            Upgrade as your team and automation grow.
+          <p className="mt-5 text-lg leading-relaxed text-[#596a85]">
+            Add more when they prove the money.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-3">
+        <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
           {Object.values(
             billingPlans
           ).map((plan) => {
@@ -39,22 +38,22 @@ export default function InvestmentCard() {
             return (
               <article
                 key={plan.id}
-                className={`relative flex h-full flex-col overflow-hidden rounded-3xl border p-7 shadow-lg md:p-8 ${
+                className={`relative flex h-full flex-col overflow-hidden rounded-[1.75rem] border p-7 shadow-[0_24px_70px_-45px_rgba(4,17,43,0.45)] transition hover:-translate-y-1 md:p-8 ${
                   featured
-                    ? "border-blue-600 bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-white shadow-2xl"
-                    : "border-slate-200 bg-white text-slate-950"
+                    ? "border-[#285bba] bg-gradient-to-br from-[#04112b] via-[#071832] to-[#0c2e69] text-white shadow-2xl"
+                    : "border-[#d5dfed] bg-white text-[#06142f]"
                 }`}
               >
                 {featured && (
                   <div className="absolute right-5 top-5 rounded-full bg-orange-400 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-slate-950">
-                    Recommended
+                    Full growth engine
                   </div>
                 )}
 
                 <p
                   className={`text-sm font-bold uppercase tracking-[0.18em] ${
                     featured
-                      ? "text-orange-300"
+                      ? "mt-8 text-orange-300"
                       : "text-blue-700"
                   }`}
                 >
@@ -84,11 +83,11 @@ export default function InvestmentCard() {
                       : "text-slate-600"
                   }`}
                 >
-                  {plan.description}
+                  {plan.promise}
                 </p>
 
                 <ul className="mt-8 space-y-4">
-                  {plan.features.map(
+                  {plan.features.slice(0, 3).map(
                     (feature) => (
                       <li
                         key={feature}
@@ -118,14 +117,20 @@ export default function InvestmentCard() {
                   )}
                 </ul>
 
+                {"note" in plan && (
+                  <p className="mt-6 rounded-xl border border-orange-300/20 bg-orange-300/10 p-3 text-xs leading-5 text-orange-100">
+                    {plan.note}
+                  </p>
+                )}
+
                 <div className="mt-auto pt-9">
                   <Link
                     href={`/app/billing?plan=${plan.id}`}
                     prefetch={false}
                     className={`flex w-full items-center justify-center rounded-xl px-6 py-4 font-bold shadow-sm transition hover:-translate-y-0.5 ${
                       featured
-                        ? "bg-white text-slate-950 hover:bg-slate-100"
-                        : "bg-blue-600 text-white hover:bg-blue-700"
+                        ? "bg-white text-[#06142f] hover:bg-blue-50"
+                        : "bg-[#246bfe] text-white hover:bg-[#1555c6]"
                     }`}
                   >
                     Choose {plan.name}
@@ -135,6 +140,8 @@ export default function InvestmentCard() {
             );
           })}
         </div>
+
+        <p className="mx-auto mt-8 max-w-3xl text-center text-sm font-semibold leading-6 text-[#66758d]">Advertising spend is separate. The owner approves every dollar.</p>
       </div>
     </section>
   );

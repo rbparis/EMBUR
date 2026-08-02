@@ -5,6 +5,7 @@ import type { Lead } from "@/types";
 import Button from "@/components/ui/Button";
 import EmburIcon from "@/components/ui/EmburIcon";
 import StatusBadge from "@/components/ui/StatusBadge";
+import type { SmsDeliveryResult } from "@/services/customerApi";
 
 const workflow = ["new", "waiting", "contacted", "follow_up", "booked", "completed", "invoiced", "paid"];
 
@@ -13,7 +14,7 @@ export default function CustomerDetailPage({ customer, onBack, onUpdate, onDelet
   onBack: () => void;
   onUpdate: (customer: Lead, input: Partial<Lead> & { estimatedValue?: number }) => Promise<void>;
   onDelete: (customer: Lead) => Promise<void>;
-  onSendMessage: (customer: Lead, body: string) => Promise<void>;
+  onSendMessage: (customer: Lead, body: string) => Promise<SmsDeliveryResult>;
 }) {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -31,7 +32,15 @@ export default function CustomerDetailPage({ customer, onBack, onUpdate, onDelet
   async function send() {
     if (!message.trim()) return;
     setBusy(true); setNotice(null);
-    try { await onSendMessage(customer, message); setMessage(""); setNotice("Message queued and saved to the customer timeline."); }
+    try {
+      const delivery = await onSendMessage(customer, message);
+      setMessage("");
+      setNotice(
+        delivery.mode === "test"
+          ? `Approved. Twilio accepted the test text for ${delivery.recipient}.`
+          : "Approved. Twilio accepted the text for delivery.",
+      );
+    }
     catch (error) { setNotice(error instanceof Error ? error.message : "Could not save message."); }
     finally { setBusy(false); }
   }
@@ -71,10 +80,10 @@ export default function CustomerDetailPage({ customer, onBack, onUpdate, onDelet
         <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-orange-600">Action center</p>
           <h4 className="mt-3 text-2xl font-bold text-slate-950">Reach out now</h4>
-          <p className="mt-2 text-slate-500">Messages are recorded immediately. Connect your SMS provider before production delivery.</p>
+          <p className="mt-2 text-slate-500">Review the message, then approve delivery. EMBUR blocks texts without recorded consent and honors SMS opt-outs.</p>
           <textarea value={message} onChange={(event) => setMessage(event.target.value)} rows={5} placeholder={`Hi ${customer.name.split(" ")[0]}, this is EMBUR following up about ${customer.service.toLowerCase()}…`} className="mt-5 w-full rounded-xl border border-slate-200 p-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100" />
           <div className="mt-3 flex flex-col gap-3 sm:flex-row">
-            <button disabled={busy || !message.trim()} onClick={send} className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-slate-950 px-5 py-3 font-bold text-white disabled:opacity-50"><EmburIcon name="conversations" size={18} /> Queue message</button>
+            <button disabled={busy || !message.trim()} onClick={send} className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-slate-950 px-5 py-3 font-bold text-white disabled:opacity-50"><EmburIcon name="conversations" size={18} /> {busy ? "Sending…" : "Approve & send text"}</button>
             {customer.phone && <a href={`tel:${customer.phone}`} className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-slate-200 px-5 py-3 font-bold text-slate-800"><EmburIcon name="phone" size={18} /> Call</a>}
           </div>
           {notice && <p className="mt-4 rounded-xl bg-slate-50 p-3 text-sm font-semibold text-slate-700">{notice}</p>}

@@ -61,12 +61,12 @@ export default function ConversationsPage({
         <aside className="border-b border-slate-200 bg-slate-50 lg:border-b-0 lg:border-r">
           <div className="border-b border-slate-200 p-5 md:p-6">
             <p className="text-sm font-bold uppercase tracking-[0.18em] text-blue-700">
-              Customer conversations
+              Calls and messages
             </p>
 
             <div className="mt-3 flex items-end justify-between gap-4">
               <h3 className="text-2xl font-bold tracking-tight text-slate-950">
-                Inbox
+                Call desk
               </h3>
 
               <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700">

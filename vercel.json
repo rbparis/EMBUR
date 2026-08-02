@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "path": "/api/hosted-sales/dispatch",
+      "schedule": "0 12 * * *"
+    },
+    {
+      "path": "/api/agents/run-daily",
+      "schedule": "0 13 * * *"
+    }
+  ]
+}

@@ -24,9 +24,9 @@ export default function OperationsPage({ customers, onOpenCustomer }: { customer
         <Metric label="Waiting now" value={String(customers.filter((c) => ["new", "waiting"].includes(normalized(c.status))).length)} />
       </section>
       <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-        <p className="text-sm font-bold uppercase tracking-[0.18em] text-orange-600">Operations</p>
-        <h3 className="mt-2 text-3xl font-bold text-slate-950">Customer journey</h3>
-        <p className="mt-2 text-slate-500">Open any card to move the work forward.</p>
+        <p className="text-sm font-bold uppercase tracking-[0.18em] text-orange-600">Jobs</p>
+        <h3 className="mt-2 text-3xl font-bold text-slate-950">From new to paid.</h3>
+        <p className="mt-2 text-slate-500">Move each job forward.</p>
         <div className="mt-6 grid gap-4 xl:grid-cols-4">
           {pipeline.map((stage) => (
             <div key={stage.key} className="rounded-2xl bg-slate-50 p-4">

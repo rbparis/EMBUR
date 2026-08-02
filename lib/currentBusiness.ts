@@ -1,8 +1,16 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
+import { resolveWorkspaceAccess } from "@/lib/workspacePolicy";
 
-const demoBusinessId = "business-embur-demo";
-const demoOwnerId = "user-mike-owner";
+function assertWorkspaceMayOpen(user: { id: string; businessId: string; role: string }) {
+  const access = resolveWorkspaceAccess(
+    user,
+    process.env.EMBUR_DEMO_MODE_ENABLED === "true"
+  );
+  if (access === "founder" || access === "denied") {
+    throw new Error("This account cannot open a client workspace.");
+  }
+}
 
 function userDisplayName(user: { firstName: string | null; lastName: string | null; username: string | null }) {
   const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ").trim();
@@ -16,6 +24,7 @@ export async function getOrCreateBusinessForUser(clerkUserId: string) {
   });
 
   if (existingUser) {
+    assertWorkspaceMayOpen(existingUser);
     return existingUser.business;
   }
 
@@ -35,29 +44,12 @@ export async function getOrCreateBusinessForUser(clerkUserId: string) {
   });
 
   if (emailUser) {
+    assertWorkspaceMayOpen(emailUser);
     await prisma.user.update({
       where: { id: emailUser.id },
       data: { clerkUserId, name },
     });
     return emailUser.business;
-  }
-
-  const demoBusiness = await prisma.business.findUnique({
-    where: { id: demoBusinessId },
-    include: {
-      users: true,
-      _count: { select: { customers: true } },
-    },
-  });
-
-  const demoOwner = demoBusiness?.users.find((user) => user.id === demoOwnerId);
-
-  if (demoBusiness && demoBusiness._count.customers > 0 && demoOwner && !demoOwner.clerkUserId) {
-    await prisma.user.update({
-      where: { id: demoOwner.id },
-      data: { clerkUserId, name, email },
-    });
-    return demoBusiness;
   }
 
   return prisma.business.create({

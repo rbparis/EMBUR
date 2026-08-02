@@ -16,6 +16,8 @@
 # next.js
 /.next/
 /out/
+/.npm-cache/
+/.vercel-cli/
 
 # production
 /build
@@ -41,6 +43,11 @@ yarn-error.log*
 next-env.d.ts
 
 /generated/prisma
+.codex-tools/
+.vercel-cache/
+.vercel-data/
+.xdg/
+*.zip
 # Local Prisma database files
 prisma/dev.db
 prisma/dev.db-journal
@@ -53,3 +60,5 @@ prisma/dev.db-wal
 .env.development.local
 .env.test.local
 .env.production.local
+
+.env*

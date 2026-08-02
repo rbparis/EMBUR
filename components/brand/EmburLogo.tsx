@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type EmburLogoProps = {
   showName?: boolean;
   size?: "small" | "medium" | "large";
@@ -33,11 +35,18 @@ export default function EmburLogo({
 
   return (
     <div className={`flex items-center gap-3 ${className}`}>
-      <img
-        src="/embur-logo.png"
-        alt="EMBUR"
-        className={`${selectedSize.image} ${selectedSize.radius} shrink-0 object-contain`}
-      />
+      <span
+        className={`${selectedSize.image} ${selectedSize.radius} relative flex shrink-0 items-center justify-center overflow-hidden bg-black shadow-[0_8px_24px_-10px_rgba(255,106,0,0.95)]`}
+      >
+        <Image
+          src="/embur-logo.png"
+          alt=""
+          fill
+          sizes="64px"
+          className="object-cover"
+          priority
+        />
+      </span>
 
       {showName && (
         <span

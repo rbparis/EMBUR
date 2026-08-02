@@ -3,13 +3,20 @@ import type { AtlasRecommendation } from "@/lib/intelligence/types";
 export type StoredAtlasActionStatus =
   | "pending"
   | "approved"
-  | "skipped";
+  | "skipped"
+  | "completed"
+  | "recovered";
 
 export type StoredAtlasAction = {
   id: string;
   recommendationId: string;
   status: StoredAtlasActionStatus;
   decidedAt: string | null;
+  title: string;
+  estimatedValue: number;
+  actualValue: number;
+  timeSavedMinutes: number;
+  completedAt: string | null;
 };
 
 type AtlasActionsResponse = {
@@ -66,7 +73,11 @@ export async function fetchAtlasActions(): Promise<
 
 export async function saveAtlasAction(
   recommendation: AtlasRecommendation,
-  status: StoredAtlasActionStatus
+  status: StoredAtlasActionStatus,
+  outcome?: {
+    actualValue?: number;
+    timeSavedMinutes?: number;
+  }
 ): Promise<StoredAtlasAction> {
   const response = await fetch(
     "/api/atlas/actions",
@@ -100,6 +111,9 @@ export async function saveAtlasAction(
           recommendation.estimatedValue,
 
         status,
+        actualValue: outcome?.actualValue ?? 0,
+        timeSavedMinutes:
+          outcome?.timeSavedMinutes ?? 0,
       }),
     }
   );

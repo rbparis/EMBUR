@@ -1,12 +1,13 @@
 import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "@/generated/prisma/client";
+import { resolveDatabaseUrl } from "./prisma/databaseUrl";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
 function createPrismaClient() {
-  const connectionString = process.env.DATABASE_URL;
+  const connectionString = resolveDatabaseUrl();
 
   if (!connectionString) {
     throw new Error(

@@ -49,12 +49,12 @@ export default function CustomersPage({ customers, onCustomerSelect, onCreateCus
     <section className="mt-8 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm md:p-7">
       <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-sm font-bold uppercase tracking-[0.18em] text-orange-600">Customer 360</p>
-          <h3 className="mt-2 text-3xl font-bold text-slate-950">Every opportunity in one place</h3>
-          <p className="mt-2 text-slate-500">Search, open, and move a customer through the entire service journey.</p>
+          <p className="text-sm font-bold uppercase tracking-[0.18em] text-orange-600">Leads</p>
+          <h3 className="mt-2 text-3xl font-bold text-slate-950">People who can become jobs.</h3>
+          <p className="mt-2 text-slate-500">Open it. Work it. Win it.</p>
         </div>
         <button type="button" onClick={() => setShowForm((value) => !value)} className="rounded-xl bg-blue-600 px-5 py-3 font-bold text-white transition hover:bg-blue-700">
-          {showForm ? "Close" : "+ Add customer"}
+          {showForm ? "Close" : "+ Add lead"}
         </button>
       </div>
 
@@ -73,7 +73,7 @@ export default function CustomersPage({ customers, onCustomerSelect, onCreateCus
       )}
 
       <div className="mt-6">
-        <label className="sr-only" htmlFor="customer-search">Search customers</label>
+        <label className="sr-only" htmlFor="customer-search">Search leads</label>
         <input id="customer-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search name, service, phone, or email…" className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" />
       </div>
 

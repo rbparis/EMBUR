@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 
 type BillingSuccessPageProps = {
   searchParams: Promise<{
@@ -33,6 +33,8 @@ export default async function BillingSuccessPage({
     );
   }
 
+  const stripe = getStripe();
+
   const session =
     await stripe.checkout.sessions.retrieve(
       sessionId
@@ -49,7 +51,7 @@ export default async function BillingSuccessPage({
         </div>
 
         <p className="mt-7 text-sm font-bold uppercase tracking-[0.18em] text-green-700">
-          Stripe test checkout
+          EMBUR subscription
         </p>
 
         <h1 className="mt-3 text-4xl font-bold tracking-tight">
@@ -60,8 +62,8 @@ export default async function BillingSuccessPage({
 
         <p className="mt-4 leading-relaxed text-slate-600">
           {completed
-            ? "Stripe accepted the test subscription. The next package will securely synchronize subscription status with EMBUR."
-            : "Stripe has not marked this Checkout Session complete yet."}
+            ? "Your subscription is active and EMBUR is ready to work for your business."
+            : "Your payment is still processing. EMBUR will update your workspace as soon as it is confirmed."}
         </p>
 
         <Link

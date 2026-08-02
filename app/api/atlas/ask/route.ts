@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getOpenAIClient } from "@/lib/openai";
+import { buildDeterministicAtlasAnswer } from "@/lib/intelligence/atlasBriefFallback";
 import type { AtlasMemory } from "@/lib/intelligence/memory/types";
 import type { AtlasSnapshot } from "@/lib/intelligence/types";
 
@@ -76,39 +77,28 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "OPENAI_API_KEY is not configured.",
-        },
-        {
-          status: 500,
-        }
-      );
-    }
-
     const model =
       process.env.OPENAI_MODEL?.trim();
 
-    if (!model) {
+    if (!process.env.OPENAI_API_KEY || !model) {
       return NextResponse.json(
         {
-          success: false,
-          message:
-            "OPENAI_MODEL is not configured.",
-        },
-        {
-          status: 500,
+          success: true,
+          answer: buildDeterministicAtlasAnswer(
+            question,
+            body.snapshot,
+            body.memory
+          ),
+          source: "deterministic",
         }
       );
     }
 
-    const client = getOpenAIClient();
+    try {
+      const client = getOpenAIClient();
 
-    const response =
-      await client.responses.create({
+      const response =
+        await client.responses.create({
         model,
 
         instructions: [
@@ -187,21 +177,40 @@ export async function POST(request: Request) {
               body.snapshot.recommendations,
           },
         }),
+        });
+
+      const answer =
+        response.output_text?.trim();
+
+      if (!answer) {
+        throw new Error(
+          "Atlas returned an empty answer."
+        );
+      }
+
+      return NextResponse.json({
+        success: true,
+        answer,
+        source: "openai",
       });
-
-    const answer =
-      response.output_text?.trim();
-
-    if (!answer) {
-      throw new Error(
-        "Atlas returned an empty answer."
+    } catch (error) {
+      console.warn(
+        "Ask Atlas is using deterministic guidance:",
+        error instanceof Error
+          ? error.message
+          : "OpenAI request failed."
       );
-    }
 
-    return NextResponse.json({
-      success: true,
-      answer,
-    });
+      return NextResponse.json({
+        success: true,
+        answer: buildDeterministicAtlasAnswer(
+          question,
+          body.snapshot,
+          body.memory
+        ),
+        source: "deterministic",
+      });
+    }
   } catch (error) {
     console.error(
       "Ask Atlas route failed:",

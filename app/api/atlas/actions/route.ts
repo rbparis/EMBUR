@@ -6,7 +6,9 @@ import { getOrCreateBusinessForUser } from "@/lib/currentBusiness";
 type AtlasActionStatus =
   | "pending"
   | "approved"
-  | "skipped";
+  | "skipped"
+  | "completed"
+  | "recovered";
 
 type SaveAtlasActionRequest = {
   recommendationId?: string;
@@ -16,6 +18,8 @@ type SaveAtlasActionRequest = {
   actionType?: string;
   riskLevel?: string;
   estimatedValue?: number;
+  actualValue?: number;
+  timeSavedMinutes?: number;
   status?: AtlasActionStatus;
 };
 
@@ -25,7 +29,9 @@ function isActionStatus(
   return (
     value === "pending" ||
     value === "approved" ||
-    value === "skipped"
+    value === "skipped" ||
+    value === "completed" ||
+    value === "recovered"
   );
 }
 
@@ -186,10 +192,26 @@ export async function POST(request: Request) {
 
           status: input.status,
 
+          actualValue: Math.max(
+            0,
+            Math.round(input.actualValue ?? 0)
+          ),
+
+          timeSavedMinutes: Math.max(
+            0,
+            Math.round(input.timeSavedMinutes ?? 0)
+          ),
+
           decidedAt:
             input.status === "pending"
               ? null
               : new Date(),
+
+          completedAt:
+            input.status === "completed" ||
+            input.status === "recovered"
+              ? new Date()
+              : null,
         },
 
         create: {
@@ -226,10 +248,26 @@ export async function POST(request: Request) {
 
           status: input.status,
 
+          actualValue: Math.max(
+            0,
+            Math.round(input.actualValue ?? 0)
+          ),
+
+          timeSavedMinutes: Math.max(
+            0,
+            Math.round(input.timeSavedMinutes ?? 0)
+          ),
+
           decidedAt:
             input.status === "pending"
               ? null
               : new Date(),
+
+          completedAt:
+            input.status === "completed" ||
+            input.status === "recovered"
+              ? new Date()
+              : null,
         },
       });
 

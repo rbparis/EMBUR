@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import SubscribeButton from "@/components/billing/SubscribeButton";
 import EmburLogo from "@/components/brand/EmburLogo";
-import { getOrCreateBusinessForUser } from "@/lib/currentBusiness";
+import { getFounderContext } from "@/lib/founderAccess.server";
+import { getClientWorkspaceForUser } from "@/lib/clientWorkspace.server";
 import {
   billingPlans,
   isBillingPlanId,
@@ -32,8 +33,11 @@ export default async function BillingPage({
     redirect("/sign-in?redirect_url=%2Fapp%2Fbilling");
   }
 
-  const business =
-    await getOrCreateBusinessForUser(userId);
+  if (await getFounderContext(userId)) {
+    redirect("/founder");
+  }
+
+  const { business } = await getClientWorkspaceForUser(userId);
 
   const {
     plan: requestedPlan,
@@ -44,7 +48,7 @@ export default async function BillingPage({
     requestedPlan &&
     isBillingPlanId(requestedPlan)
       ? requestedPlan
-      : "growth";
+      : "gold";
 
   const selectedPlan =
     billingPlans[selectedPlanId];
@@ -148,16 +152,25 @@ export default async function BillingPage({
               </ul>
 
               <div className="mt-8">
-                <SubscribeButton
-                  planId={selectedPlan.id}
-                  planName={selectedPlan.name}
-                  price={selectedPlan.price}
-                />
+                {selectedPlan.id === "platinum" ? (
+                  <a
+                    href="mailto:getembur@gmail.com?subject=EMBUR%20Platinum%20onboarding"
+                    className="flex w-full items-center justify-center rounded-xl bg-orange-500 px-6 py-4 text-center font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-orange-600"
+                  >
+                    Start Platinum onboarding — $999/month
+                  </a>
+                ) : (
+                  <SubscribeButton
+                    planId={selectedPlan.id}
+                    planName={selectedPlan.name}
+                    price={selectedPlan.price}
+                  />
+                )}
               </div>
 
               <p className="mt-5 text-center text-xs leading-relaxed text-slate-500">
-                Secure Stripe Checkout. Test mode currently
-                enabled.
+                Secure Stripe Checkout. You can change or cancel your plan
+                according to the terms shown at checkout.
               </p>
             </div>
           </section>

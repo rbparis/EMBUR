@@ -1,11 +1,13 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 import {
-  isBillingPlanId,
+  normalizeBillingPlanId,
   type BillingPlanId,
 } from "@/lib/billing/plans";
+import { EMBUR_INTERNAL_BUSINESS_ID } from "@/lib/internalWorkspace";
+import { metricEventKey, recordMetricEvent } from "@/lib/metrics.server";
 
 export const runtime = "nodejs";
 
@@ -29,9 +31,7 @@ function getStripeId(
 function getPlanId(
   value: string | null | undefined
 ): BillingPlanId | null {
-  return value && isBillingPlanId(value)
-    ? value
-    : null;
+  return normalizeBillingPlanId(value);
 }
 
 function getCurrentPeriodEndsAt(
@@ -43,6 +43,37 @@ function getCurrentPeriodEndsAt(
   return periodEnd
     ? new Date(periodEnd * 1000)
     : null;
+}
+
+async function recordStripeMetric({
+  event,
+  metric,
+  businessId,
+  metadata,
+}: {
+  event: Stripe.Event;
+  metric: string;
+  businessId?: string | null;
+  metadata?: Record<string, string | number | boolean | null>;
+}) {
+  if (!businessId || businessId === EMBUR_INTERNAL_BUSINESS_ID) {
+    throw new Error("Stripe event is missing a valid client tenant.");
+  }
+  const business = await prisma.business.findUnique({
+    where: { id: businessId },
+    select: { id: true },
+  });
+  if (!business) {
+    throw new Error("Stripe event references an unknown client tenant.");
+  }
+  await recordMetricEvent({
+    tenantId: business.id,
+    accountMode: "client",
+    externalId: metricEventKey("stripe_webhook", event.id),
+    event: metric,
+    source: "stripe_webhook",
+    metadata,
+  });
 }
 
 async function syncSubscription(
@@ -117,6 +148,8 @@ export async function POST(request: Request) {
   let event: Stripe.Event;
 
   try {
+    const stripe = getStripe();
+
     event = stripe.webhooks.constructEvent(
       payload,
       signature,
@@ -140,6 +173,8 @@ export async function POST(request: Request) {
   }
 
   try {
+    const stripe = getStripe();
+
     switch (event.type) {
       case "checkout.session.completed": {
         const session =
@@ -161,11 +196,12 @@ export async function POST(request: Request) {
           session.subscription
         );
 
-        if (businessId) {
-          await prisma.business.updateMany({
-            where: {
-              id: businessId,
-            },
+        if (!businessId || businessId === EMBUR_INTERNAL_BUSINESS_ID) {
+          throw new Error("Checkout completion is missing a valid client tenant.");
+        }
+
+        const updated = await prisma.business.updateMany({
+            where: { id: businessId },
             data: {
               stripeCustomerId,
               stripeSubscriptionId,
@@ -178,6 +214,8 @@ export async function POST(request: Request) {
                 : {}),
             },
           });
+        if (updated.count !== 1) {
+          throw new Error("Checkout completion references an unknown client tenant.");
         }
 
         if (stripeSubscriptionId) {
@@ -189,6 +227,29 @@ export async function POST(request: Request) {
           await syncSubscription(subscription);
         }
 
+        if (session.payment_status === "paid") {
+          await recordStripeMetric({
+            event,
+            metric: "subscription_success",
+            businessId,
+            metadata: {
+              planId: subscriptionPlan,
+              paid: true,
+            },
+          });
+        }
+
+        break;
+      }
+
+      case "checkout.session.expired": {
+        const session = event.data.object as Stripe.Checkout.Session;
+        await recordStripeMetric({
+          event,
+          metric: "checkout_expired",
+          businessId: session.metadata?.businessId ?? session.client_reference_id,
+          metadata: { planId: session.metadata?.planId ?? null },
+        });
         break;
       }
 
@@ -221,6 +282,18 @@ export async function POST(request: Request) {
             },
           });
         }
+
+        const business = stripeCustomerId
+          ? await prisma.business.findUnique({
+              where: { stripeCustomerId },
+              select: { id: true },
+            })
+          : null;
+        await recordStripeMetric({
+          event,
+          metric: "payment_failed",
+          businessId: business?.id,
+        });
 
         break;
       }

@@ -1,6 +1,11 @@
 import type { Lead } from "@/types";
 
 type CustomerResponse = { success: boolean; customers?: Lead[]; customer?: Lead; message?: string };
+export type SmsDeliveryResult = {
+  mode: "test" | "live";
+  status: string;
+  recipient: string;
+};
 
 async function parse(response: Response): Promise<CustomerResponse> {
   const result = (await response.json()) as CustomerResponse;
@@ -30,6 +35,18 @@ export async function deleteDatabaseCustomer(id: Lead["id"]): Promise<void> {
   await parse(await fetch(`/api/customers/${id}`, { method: "DELETE" }));
 }
 
-export async function sendCustomerMessage(id: Lead["id"], body: string, channel: "sms" | "email" = "sms"): Promise<void> {
-  await parse(await fetch(`/api/customers/${id}/messages`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ body, channel }) }));
+export async function sendCustomerMessage(id: Lead["id"], body: string, channel: "sms" | "email" = "sms"): Promise<SmsDeliveryResult> {
+  const response = await fetch(`/api/customers/${id}/messages`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ body, channel }),
+  });
+  const result = await response.json() as CustomerResponse & { delivery?: SmsDeliveryResult };
+  if (!response.ok || !result.success) {
+    throw new Error(result.message ?? "EMBUR could not deliver the text.");
+  }
+  if (!result.delivery) {
+    throw new Error("Twilio did not return a delivery result.");
+  }
+  return result.delivery;
 }

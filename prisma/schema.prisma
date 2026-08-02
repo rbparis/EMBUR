@@ -8,24 +8,157 @@ datasource db {
 }
 
 model Business {
-  id                   String         @id @default(cuid())
-  clerkOrganizationId  String?        @unique
-  stripeCustomerId     String?        @unique
-  stripeSubscriptionId String?        @unique
-  subscriptionPlan     String         @default("none")
-  subscriptionStatus   String         @default("inactive")
+  id                   String             @id @default(cuid())
+  clerkOrganizationId  String?            @unique
+  stripeCustomerId     String?            @unique
+  stripeSubscriptionId String?            @unique
+  subscriptionPlan     String             @default("none")
+  subscriptionStatus   String             @default("inactive")
   currentPeriodEndsAt  DateTime?
   name                 String
   phone                String?
   industry             String?
-  timezone             String         @default("America/New_York")
+  timezone             String             @default("America/New_York")
   users                User[]
   customers            Customer[]
   conversations        Conversation[]
   atlasMemory          AtlasMemory?
   atlasActions         AtlasAction[]
-  createdAt            DateTime       @default(now())
-  updatedAt            DateTime       @updatedAt
+  agentTasks           AgentTask[]
+  outreachProspects    OutreachProspect[]
+  contentArtifacts     ContentArtifact[]
+  blogPosts            BlogPost[]
+  agentMessages        AgentMessage[]
+  metricEvents         MetricEvent[]
+  demoRequests         DemoRequest[]
+  hostedJobs           HostedJob[]
+  hostedRuns           HostedRun[]
+  outreachSuppressions OutreachSuppression[]
+  approvalEmails       ApprovalEmail[]
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+}
+
+model HostedJob {
+  id          String   @id @default(cuid())
+  businessId  String
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  accountMode String
+  jobType     String
+  status      String   @default("active")
+  lastRunAt   DateTime?
+  nextRunAt   DateTime?
+  lastError   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  runs        HostedRun[]
+
+  @@unique([businessId, accountMode, jobType])
+  @@index([status, nextRunAt])
+}
+
+model HostedRun {
+  id           String    @id @default(cuid())
+  businessId   String
+  business     Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  jobId        String
+  job          HostedJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  accountMode  String
+  scheduledKey String
+  status       String    @default("running")
+  startedAt    DateTime  @default(now())
+  finishedAt   DateTime?
+  error        String?
+  metrics      Json?
+  attempt      Int       @default(1)
+  maxAttempts  Int       @default(5)
+  retryAt      DateTime?
+  deadLetteredAt DateTime?
+
+  @@unique([jobId, scheduledKey])
+  @@index([businessId, accountMode, startedAt])
+  @@index([status, startedAt])
+}
+
+model OutreachSuppression {
+  id          String   @id @default(cuid())
+  businessId  String
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  accountMode String
+  channel     String
+  normalized  String
+  reason      String
+  source      String
+  createdAt   DateTime @default(now())
+
+  @@unique([businessId, accountMode, channel, normalized])
+  @@index([businessId, accountMode, createdAt])
+}
+
+model ApprovalEmail {
+  id             String    @id @default(cuid())
+  businessId     String
+  business       Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  accountMode    String
+  prospectId     String?
+  recipientEmail String
+  normalized     String
+  subject        String
+  body           String
+  status         String    @default("pending_approval")
+  approvedAt     DateTime?
+  rejectedAt     DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([businessId, accountMode, prospectId])
+  @@index([businessId, accountMode, status, createdAt])
+}
+
+model DemoRequest {
+  id            String    @id @default(cuid())
+  businessId    String
+  business      Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  name          String
+  businessName  String
+  email         String
+  phone         String
+  website       String?
+  market        String?
+  challenge     String?
+  preferredTime String?
+  status        String    @default("new")
+  source        String    @default("website")
+  scheduledAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([businessId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([email])
+}
+
+model MetricEvent {
+  id         String    @id @default(cuid())
+  businessId String?
+  business   Business? @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  accountMode String
+  visitorId  String?
+  externalId String?   @unique
+  event      String
+  source     String    @default("app")
+  agent      String?
+  path       String?
+  metadata   Json?
+  createdAt  DateTime  @default(now())
+
+  @@index([businessId])
+  @@index([businessId, accountMode, createdAt])
+  @@index([event])
+  @@index([agent])
+  @@index([createdAt])
+  @@index([visitorId])
 }
 
 model User {
@@ -105,10 +238,127 @@ model AtlasAction {
   estimatedValue    Int       @default(0)
   status            String    @default("pending")
   decidedAt         DateTime?
+  actualValue       Int       @default(0)
+  timeSavedMinutes  Int       @default(0)
+  completedAt       DateTime?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
   @@unique([businessId, recommendationId])
   @@index([businessId])
   @@index([status])
+}
+
+model AgentTask {
+  id           String    @id @default(cuid())
+  businessId   String
+  business     Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  agent        String
+  title        String
+  description  String
+  taskType     String
+  status       String    @default("pending")
+  scheduledFor DateTime?
+  result       String?
+  metadata     Json?
+  completedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([businessId])
+  @@index([agent])
+  @@index([status])
+  @@index([scheduledFor])
+}
+
+model OutreachProspect {
+  id              String    @id @default(cuid())
+  businessId      String
+  business        Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  company         String
+  ownerName       String?
+  email           String?
+  website         String?
+  location        String?
+  notes           String?
+  sourceUrl       String?
+  stage           String    @default("draft")
+  sequence        Json?
+  activeStep      Int       @default(1)
+  nextFollowUpAt  DateTime?
+  lastContactedAt DateTime?
+  optedOutAt      DateTime?
+  plan            String?
+  monthlyRevenue  Int       @default(0)
+  wonAt           DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([businessId, email])
+  @@unique([businessId, sourceUrl])
+  @@index([businessId])
+  @@index([stage])
+  @@index([nextFollowUpAt])
+  @@index([wonAt])
+}
+
+model ContentArtifact {
+  id           String    @id @default(cuid())
+  businessId   String
+  business     Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  agent        String
+  kind         String
+  title        String
+  summary      String
+  content      String
+  checklist    Json?
+  channel      String?
+  keywords     String[]
+  status       String    @default("draft")
+  scheduledFor DateTime?
+  publishedUrl String?
+  publishedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([businessId])
+  @@index([agent])
+  @@index([kind])
+  @@index([status])
+  @@index([scheduledFor])
+}
+
+model BlogPost {
+  id          String    @id @default(cuid())
+  businessId  String
+  business    Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  title       String
+  slug        String    @unique
+  excerpt     String
+  content     String
+  keywords    String[]
+  status      String    @default("draft")
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([businessId])
+  @@index([status])
+  @@index([publishedAt])
+}
+
+model AgentMessage {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  agent      String
+  role       String
+  content    String
+  taskId     String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([businessId])
+  @@index([agent])
+  @@index([createdAt])
 }

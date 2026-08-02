@@ -1,94 +1,70 @@
+import Link from "next/link";
+
 export default function HeroSection() {
   return (
-    <section
-      id="top"
-      className="relative overflow-hidden border-b border-slate-200/70"
-    >
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-0 h-[520px] w-[760px] -translate-x-1/2 rounded-full bg-blue-100/70 blur-3xl" />
-        <div className="absolute -right-40 top-40 h-96 w-96 rounded-full bg-orange-100/70 blur-3xl" />
-      </div>
+    <section id="top" className="relative isolate overflow-hidden bg-[#04112b] text-white">
+      <div className="embur-hero-grid pointer-events-none absolute inset-0 opacity-60" />
+      <div className="pointer-events-none absolute left-[-14rem] top-16 h-[42rem] w-[42rem] rounded-full bg-[#1257d8]/25 blur-[125px]" />
+      <div className="pointer-events-none absolute right-[-10rem] top-[-12rem] h-[36rem] w-[36rem] rounded-full bg-[#246bfe]/20 blur-[120px]" />
 
-      <div className="relative mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28 lg:py-32">
-        <div className="mx-auto max-w-5xl text-center">
-          <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm">
-            <span className="h-2 w-2 rounded-full bg-green-500" />
-            Built for local service business owners
-          </div>
-
-          <h1 className="mt-8 text-4xl font-bold leading-[1.08] tracking-tight text-slate-950 sm:text-5xl md:text-7xl">
-            Your business keeps moving.
-            <br />
-            <span className="bg-gradient-to-r from-orange-500 to-amber-400 bg-clip-text text-transparent">
-              Your time becomes yours again.
-            </span>
+      <div className="relative mx-auto grid min-h-[calc(100vh-80px)] max-w-[90rem] items-center gap-12 px-5 py-16 md:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:py-24">
+        <div className="embur-rise-in max-w-3xl">
+          <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-[#86adff]">Agents for local business</p>
+          <h1 className="font-display mt-6 text-[clamp(4rem,8vw,8.2rem)] font-semibold leading-[0.83] tracking-[-0.07em]">
+            More calls.
+            <span className="block text-[#78a9ff]">More jobs.</span>
+            <span className="block text-[#ff6a3d]">More money.</span>
           </h1>
-
-          <p className="mx-auto mt-7 max-w-3xl text-lg leading-relaxed text-slate-600 md:text-xl">
-            EMBUR recovers missed opportunities, organizes what deserves your
-            attention, and carries the repetitive work that keeps following you
-            home.
+          <p className="mt-8 max-w-xl text-lg leading-8 text-[#a8b9d4] md:text-xl">
+            EMBUR puts trained agents on the work that grows your business.
           </p>
-
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <a
-              href="#time-back"
-              className="inline-flex min-w-52 items-center justify-center rounded-xl bg-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-blue-600/15 transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-xl"
-            >
-              Get My Time Back
-            </a>
-
-            <a
-              href="#product"
-              className="inline-flex min-w-52 items-center justify-center rounded-xl border bg-white px-8 py-4 text-lg font-semibold text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-md"
-            >
-              See EMBUR in Action
-            </a>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <a href="#watch" className="inline-flex min-h-14 items-center justify-center rounded-full bg-white px-7 font-extrabold text-[#06142f] transition hover:-translate-y-0.5 hover:bg-blue-50">Watch EMBUR work</a>
+            <Link href="/sign-up" className="inline-flex min-h-14 items-center justify-center rounded-full border border-white/20 bg-white/[0.07] px-7 font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-white/[0.12]">Sign up</Link>
           </div>
-
-          <p className="mt-5 text-sm text-slate-500">
-            No sales pressure. A conversation about your business and your
-            time.
-          </p>
         </div>
 
-        <div className="mx-auto mt-16 grid max-w-5xl gap-4 sm:grid-cols-3">
-          <HeroProof
-            value="$3,250"
-            label="Revenue recovered yesterday"
-          />
-
-          <HeroProof
-            value="2h 18m"
-            label="Time returned yesterday"
-          />
-
-          <HeroProof
-            value="1"
-            label="Priority needing attention"
-          />
-        </div>
+        <CallMoment />
       </div>
     </section>
   );
 }
 
-function HeroProof({
-  value,
-  label,
-}: {
-  value: string;
-  label: string;
-}) {
+function CallMoment() {
   return (
-    <div className="rounded-2xl border border-white/80 bg-white/80 p-5 text-left shadow-sm backdrop-blur-sm">
-      <p className="text-2xl font-bold tracking-tight text-slate-950">
-        {value}
-      </p>
+    <div className="relative mx-auto w-full max-w-[42rem] lg:ml-auto">
+      <div className="absolute -inset-10 rounded-full bg-blue-500/15 blur-3xl" />
+      <div className="relative overflow-hidden rounded-[2.2rem] border border-white/15 bg-[#071832]/95 p-5 shadow-[0_50px_120px_-35px_rgba(0,0,0,0.85)] backdrop-blur-2xl md:p-7">
+        <div className="flex items-center justify-between border-b border-white/10 pb-5">
+          <div className="flex items-center gap-3">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-300/15 text-emerald-200">●</span>
+            <div><p className="font-display font-semibold">Call Agent</p><p className="text-xs text-[#7188ad]">11:47 PM · Answered in 2 seconds</p></div>
+          </div>
+          <span className="rounded-full bg-emerald-300/10 px-3 py-1.5 text-xs font-bold text-emerald-200">LIVE</span>
+        </div>
 
-      <p className="mt-1 text-sm leading-relaxed text-slate-500">
-        {label}
-      </p>
+        <div className="py-9 md:py-12">
+          <div className="mx-auto flex h-24 items-end justify-center gap-1.5" aria-hidden="true">
+            {[28, 48, 72, 42, 88, 58, 34, 66, 92, 52, 30, 62, 80, 44, 24].map((height, index) => (
+              <span key={index} className="w-1.5 rounded-full bg-gradient-to-t from-[#246bfe] to-[#8fb4ff] embur-wave" style={{ height: `${height}%`, animationDelay: `${index * 70}ms` }} />
+            ))}
+          </div>
+          <p className="font-display mx-auto mt-7 max-w-lg text-center text-2xl font-semibold leading-snug md:text-3xl">
+            &ldquo;You called the right place.<br />We&apos;ve got you.&rdquo;
+          </p>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2 border-t border-white/10 pt-5 text-center">
+          <Stat value="Qualified" label="need" />
+          <Stat value="$4,200" label="job value" />
+          <Stat value="Booked" label="result" />
+        </div>
+      </div>
+      <div className="absolute -bottom-5 left-6 rounded-2xl bg-[#ff6a3d] px-5 py-3 font-display font-semibold text-white shadow-xl shadow-orange-950/30">One missed call. One new job.</div>
     </div>
   );
+}
+
+function Stat({ value, label }: { value: string; label: string }) {
+  return <div className="rounded-xl bg-white/[0.045] px-2 py-3"><p className="font-display text-sm font-semibold text-white md:text-base">{value}</p><p className="mt-1 text-[10px] uppercase tracking-wider text-[#7188ad]">{label}</p></div>;
 }
