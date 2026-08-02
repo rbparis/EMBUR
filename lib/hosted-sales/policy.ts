@@ -1,5 +1,5 @@
-export const HOSTED_INTERVAL_MS = 300_000;
-export const STALE_RUN_MS = 15 * 60_000;
+export const HOSTED_INTERVAL_MS = 15 * 60_000;
+export const STALE_RUN_MS = 45 * 60_000;
 export const MAX_ATTEMPTS = 5;
 
 export function scheduledKey(date = new Date()) {
