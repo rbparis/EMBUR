@@ -8,10 +8,10 @@ const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope", displa
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "EMBUR - More Calls. More Jobs. More Money.", template: "%s | EMBUR" },
-  description: "EMBUR puts specialized agents on calls, booking, follow-up, referrals, reputation, content, and traffic for local service businesses.",
+  title: { default: "EMBUR — Organized after-hours follow-up", template: "%s | EMBUR" },
+  description: "Collect web inquiries, organize customer records and conversations, and review Atlas follow-up priorities.",
   applicationName: "EMBUR",
-  keywords: ["local service business", "missed call recovery", "customer follow-up", "business operations", "time returned", "HVAC software"],
+  keywords: ["local service business", "web intake", "customer follow-up", "business operations", "HVAC software"],
   icons: { icon: "/embur-mark.svg", apple: "/embur-logo.png" },
 };
 
