@@ -3,17 +3,17 @@ import LegalPage from "@/components/legal/LegalPage";
 
 export const metadata: Metadata = {
   title: "Refund Policy",
-  description: "EMBUR subscription cancellation and refund policy.",
+  description: "EMBUR paid-enrollment status and billing review contact.",
 };
 
 const sections = [
-  { title: "Subscription charges", paragraphs: ["EMBUR subscriptions are billed in advance for the billing period shown at checkout. Except where required by law, subscription charges are non-refundable once a billing period begins."] },
-  { title: "Canceling a plan", paragraphs: ["You may cancel before your next renewal through available account controls or by emailing hello@getembur.com. Cancellation prevents future renewal charges. Access normally continues through the end of the paid billing period unless the account is terminated for misuse or security reasons."] },
-  { title: "Billing errors and duplicate charges", paragraphs: ["If you believe a charge was duplicated or made in error, contact hello@getembur.com within 14 days of the charge. Include the account email, charge date, amount, and a short explanation. We will review the payment record and correct confirmed errors."] },
-  { title: "Third-party and usage costs", paragraphs: ["Amounts already spent on advertising, messaging, phone usage, third-party services, or other metered resources are not refundable once incurred, unless required by law or caused by a confirmed EMBUR billing error."] },
-  { title: "How to request review", paragraphs: ["Email hello@getembur.com with the subject “Billing review.” We aim to acknowledge requests within two business days. Approval of any exception is at EMBUR’s discretion unless applicable law requires otherwise."] },
+  { title: "Subscription charges", paragraphs: ["Paid enrollment is paused. The planned pilot is free and applications are not open yet. No new paid subscription starts from the early-access page."] },
+  { title: "Canceling a plan", paragraphs: ["There is no new paid plan to enroll in during this holding period. Any future paid plan will disclose cancellation and refund terms before purchase."] },
+  { title: "Billing errors and duplicate charges", paragraphs: ["If you believe a charge was duplicated or made in error, contact getembur@gmail.com within 14 days of the charge. Include the account email, charge date, amount, and a short explanation. We will review the payment record and correct confirmed errors."] },
+  { title: "Third-party and usage costs", paragraphs: ["EMBUR does not currently offer live call handling, automated messaging, or advertising services. Any future usage costs will be disclosed before activation."] },
+  { title: "How to request review", paragraphs: ["Email getembur@gmail.com with the subject “Billing review.” We aim to acknowledge requests within two business days. Approval of any exception is at EMBUR’s discretion unless applicable law requires otherwise."] },
 ];
 
 export default function RefundPage() {
-  return <LegalPage eyebrow="Clear billing" title="Refund Policy" summary="Simple terms for renewals, cancellations, billing errors, and refund reviews." sections={sections} />;
+  return <LegalPage eyebrow="Clear billing" title="Refund Policy" summary="Paid enrollment is paused. Contact us about any historical billing error or refund question." sections={sections} />;
 }
