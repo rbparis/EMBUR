@@ -32,7 +32,7 @@ export default function Home() {
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-300">After-hours web intake for local business</p>
             <h1 className="font-display mt-6 text-5xl font-semibold leading-tight tracking-tight md:text-7xl">Turn after-hours inquiries into organized follow-up.</h1>
             <p className="mt-7 max-w-xl text-lg leading-8 text-slate-300">{description}</p>
-            <Link href="/#early-access" className="mt-8 inline-flex rounded-full bg-white px-7 py-4 font-bold text-[#06142f]">Join early access</Link>
+            <Link href="mailto:getembur@gmail.com" className="mt-8 inline-flex rounded-full bg-white px-7 py-4 font-bold text-[#06142f]">Ask about the pilot</Link>
           </div>
           <div className="rounded-[2rem] border border-white/15 bg-[#071832] p-7 md:p-9">
             <h2 className="font-display text-2xl font-semibold">Illustrative workflow</h2>
