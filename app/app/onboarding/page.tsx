@@ -59,12 +59,12 @@ export default async function OnboardingPage({ searchParams }: Props) {
                 </div>
               </div>
               <div className="rounded-2xl bg-[#fff4ef] p-5">
-                <p className="font-display text-xl font-semibold">Put this link where calls get lost.</p>
+                <p className="font-display text-xl font-semibold">Share your web intake link.</p>
                 <ul className="mt-3 space-y-2 text-sm leading-6 text-[#596a85]">
                   <li>• Website contact button</li>
                   <li>• Google Business Profile</li>
                   <li>• After-hours voicemail</li>
-                  <li>• Missed-call text reply</li>
+                  <li>• A reply you send yourself</li>
                 </ul>
               </div>
             </div>
@@ -73,8 +73,8 @@ export default async function OnboardingPage({ searchParams }: Props) {
           <div className="mt-10 grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
             <section className="pt-4">
               <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-orange-200">First five minutes</p>
-              <h1 className="font-display mt-5 text-5xl font-semibold leading-[0.98] tracking-[-0.055em] md:text-6xl">Set the business. Start catching leads.</h1>
-              <p className="mt-6 text-lg leading-8 text-[#a8b9d4]">These details power your workspace and the page customers use when nobody can answer.</p>
+              <h1 className="font-display mt-5 text-5xl font-semibold leading-[0.98] tracking-[-0.055em] md:text-6xl">Set up your web intake page.</h1>
+              <p className="mt-6 text-lg leading-8 text-[#a8b9d4]">These details appear in your workspace and the web form customers can use to submit an inquiry.</p>
               <ol className="mt-8 space-y-4">
                 <Step number="1" text="Confirm how customers know your business." />
                 <Step number="2" text="Open and test the private intake page." />
