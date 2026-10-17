@@ -17,7 +17,10 @@ function run(name, args) {
   }
 }
 
-if (process.env.VERCEL === "1") {
+if (
+  process.env.VERCEL === "1" &&
+  process.env.VERCEL_ENV === "production"
+) {
   run("prisma", ["migrate", "deploy"]);
 }
 

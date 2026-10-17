@@ -67,15 +67,6 @@ export default function GrowthPage({
         })}
       </section>
 
-      {currentRank < 5 && (
-        <section className="rounded-[1.75rem] border border-[#1b3a70] bg-[#06142f] p-6 text-white shadow-xl md:p-8">
-          <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-200">Platinum · $999/month</p>
-          <h3 className="font-display mt-3 text-3xl font-semibold">Add a managed Growth Office.</h3>
-          <p className="mt-3 max-w-3xl leading-7 text-[#a8b9d4]">Atlas coordinates outreach, social, SEO, video, reputation, referrals, and paid-campaign preparation. You approve what sends, publishes, or spends.</p>
-          <a href="/app/billing?plan=platinum" className="mt-6 inline-flex rounded-xl bg-[#ff6a3d] px-6 py-3 font-extrabold text-white">See Platinum</a>
-        </section>
-      )}
-
       {atlas && <AtlasActionQueue recommendations={atlas.recommendations} onOpenCustomer={(customerId) => { const customer = customers.find((item) => String(item.id) === String(customerId)); if (customer) onOpenCustomer(customer); }} />}
 
       <section className="rounded-[1.75rem] border border-[#d8e1ee] bg-white p-6 shadow-sm md:p-8">

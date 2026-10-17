@@ -20,7 +20,7 @@ export default function HeroSection() {
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <a href="#watch" className="inline-flex min-h-14 items-center justify-center rounded-full bg-white px-7 font-extrabold text-[#06142f] transition hover:-translate-y-0.5 hover:bg-blue-50">Watch EMBUR work</a>
-            <Link href="/sign-up" className="inline-flex min-h-14 items-center justify-center rounded-full border border-white/20 bg-white/[0.07] px-7 font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-white/[0.12]">Sign up</Link>
+            <Link href="/#early-access" className="inline-flex min-h-14 items-center justify-center rounded-full border border-white/20 bg-white/[0.07] px-7 font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-white/[0.12]">Join early access</Link>
           </div>
         </div>
 
