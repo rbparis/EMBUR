@@ -34,10 +34,10 @@ export default function FounderControlRoom({ hostedSalesMetrics }: { hostedSales
               Founder access verified
             </span>
             <Link
-              href="/"
+              href="/app"
               className="rounded-xl border border-white/15 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-white/10"
             >
-              Open public site
+              Open customer app
             </Link>
           </div>
         </div>
