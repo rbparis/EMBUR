@@ -38,19 +38,12 @@ export default function FounderWorkstationPage({ hostedSalesMetrics }: { hostedS
 
       <HostedSalesStatus metrics={hostedSalesMetrics} />
       <AgentCommandCenter />
+      <RevenueMissionPanel />
       <DemoRequestPanel />
       <FirstRevenueQueue />
-      <details className="rounded-2xl border border-slate-200 bg-white p-5">
-        <summary className="cursor-pointer font-semibold">Revenue goals and planning</summary>
-        <div className="mt-5"><RevenueMissionPanel /></div>
-      </details>
-      <details className="rounded-2xl border border-slate-200 bg-white p-5">
-        <summary className="cursor-pointer font-semibold">Agent assignments and draft tools</summary>
-        <p className="my-4 text-sm text-slate-600">Optional tools. Opening this section does not authorize sending, publishing, or spending.</p>
-        <DailyAgentControlPanel />
-        <OutreachAgentPanel />
-        <GrowthAgentOperationsPanel />
-      </details>
+      <DailyAgentControlPanel />
+      <OutreachAgentPanel />
+      <GrowthAgentOperationsPanel />
 
       <section className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm leading-6 text-amber-950">
         <strong>Operating rule:</strong> HQ can research, plan, draft, prioritize, publish an approved EMBUR article, and learn from outcomes. Sending email or text, posting to connected social accounts, buying ads, or contacting scraped personal data requires an approved channel, lawful suppression controls, and your authorization.
