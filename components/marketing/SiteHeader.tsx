@@ -8,7 +8,7 @@ import EmburLogo from "@/components/brand/EmburLogo";
 const navigation = [
   { label: "Watch", href: "#watch" },
   { label: "Agents", href: "#agents" },
-  { label: "Plans", href: "#investment" },
+  { label: "Early access", href: "#early-access" },
   { label: "Field notes", href: "/blog" },
 ];
 
@@ -31,7 +31,7 @@ export default function SiteHeader() {
         <div className="hidden items-center gap-2 md:flex">
           <Show when="signed-out">
             <Link href="/sign-in" className="rounded-full px-4 py-2.5 text-sm font-bold text-slate-200 transition hover:bg-white/10">Sign in</Link>
-            <Link href="/sign-up" className="rounded-full bg-white px-5 py-2.5 text-sm font-extrabold text-[#061027] transition hover:-translate-y-0.5 hover:bg-blue-50">Sign up</Link>
+            <Link href="/#early-access" className="rounded-full bg-white px-5 py-2.5 text-sm font-extrabold text-[#061027] transition hover:-translate-y-0.5 hover:bg-blue-50">Join early access</Link>
           </Show>
           <Show when="signed-in">
             <Link href="/app" prefetch={false} className="rounded-full bg-white px-5 py-2.5 text-sm font-extrabold text-[#061027] transition hover:-translate-y-0.5">Open command center</Link>
@@ -52,7 +52,7 @@ export default function SiteHeader() {
             ))}
             <Show when="signed-out">
               <Link href="/sign-in" onClick={() => setMenuOpen(false)} className="mt-2 rounded-xl border border-white/15 px-4 py-3 text-center font-bold">Sign in</Link>
-              <Link href="/sign-up" onClick={() => setMenuOpen(false)} className="rounded-xl bg-white px-4 py-3 text-center font-extrabold text-[#061027]">Sign up</Link>
+              <Link href="/#early-access" onClick={() => setMenuOpen(false)} className="rounded-xl bg-white px-4 py-3 text-center font-extrabold text-[#061027]">Join early access</Link>
             </Show>
           </nav>
         </div>
