@@ -7,16 +7,16 @@ export const metadata: Metadata = {
 };
 
 const sections = [
-  { title: "Agreement and eligibility", paragraphs: ["These Terms govern access to and use of EMBUR. By creating an account, purchasing a subscription, or using the service, you agree to these Terms. You must be legally able to enter a binding agreement and use EMBUR for a lawful business purpose."] },
+  { title: "Agreement and eligibility", paragraphs: ["These Terms govern access to and use of EMBUR. By creating an account or using the service, you agree to these Terms. You must be legally able to enter a binding agreement and use EMBUR for a lawful business purpose."] },
   { title: "Accounts and business data", paragraphs: ["You are responsible for accurate account information, safeguarding login credentials, activities within your workspace, and promptly notifying EMBUR of suspected unauthorized access. You retain ownership of the business and customer information you submit and grant EMBUR permission to process it to provide, secure, and improve the service."] },
   {
     title: "Subscriptions and billing",
     paragraphs: [
-      "Paid plans renew automatically at the interval shown at checkout until canceled. You authorize Stripe and EMBUR to charge the selected payment method for subscription fees, taxes, usage charges, and other amounts clearly disclosed before purchase.",
-      "You may cancel before the next renewal through available account controls or by contacting hello@getembur.com. Cancellation stops future renewals but does not ordinarily refund an already-started billing period. The Refund Policy is part of these Terms.",
+      "Paid enrollment is paused. The planned pilot is free and applications are not open yet. No subscription or payment starts from the early-access page.",
+      "Any future paid offering will state its price, billing interval, cancellation terms, and applicable refund policy before purchase. Contact getembur@gmail.com with questions about existing billing records.",
     ],
   },
-  { title: "Communications and outreach", paragraphs: ["You are responsible for ensuring that your use of calls, texts, email, customer lists, recordings, advertisements, and automated outreach complies with applicable laws, platform rules, consent requirements, opt-out requirements, and do-not-contact restrictions. Do not use EMBUR to send deceptive, abusive, unlawful, or unsolicited communications."] },
+  { title: "Communications and outreach", paragraphs: ["Call handling, booking, referrals, automated messaging, and traffic agents are not live services. You are responsible for ensuring that your own communications and any future use of outreach features comply with applicable laws, platform rules, consent requirements, opt-out requirements, and do-not-contact restrictions. Do not use EMBUR to send deceptive, abusive, unlawful, or unsolicited communications."] },
   {
     title: "AI-assisted features",
     paragraphs: [
@@ -33,7 +33,7 @@ const sections = [
       "Do not use generated content or automation without the review, disclosures, permissions, and approvals required for your business.",
     ],
   },
-  { title: "Availability and changes", paragraphs: ["We work to keep EMBUR dependable, but do not promise uninterrupted or error-free operation. Features may change as the product improves. We may suspend access when necessary for security, maintenance, nonpayment, legal compliance, or material violation of these Terms."] },
+  { title: "Availability and changes", paragraphs: ["We work to keep EMBUR dependable, but do not promise uninterrupted or error-free operation. Features may change as the product improves. We may suspend access when necessary for security, maintenance, legal compliance, or material violation of these Terms."] },
   {
     title: "Disclaimers and liability",
     paragraphs: [
@@ -44,8 +44,8 @@ const sections = [
   {
     title: "Ending use and contact",
     paragraphs: [
-      "You may stop using EMBUR at any time. Terms that by their nature should survive will remain in effect, including payment obligations, ownership, disclaimers, and liability limits. We may update these Terms and will post material changes with a new effective date.",
-      "Questions about these Terms may be sent to hello@getembur.com.",
+      "You may stop using EMBUR at any time. Terms that by their nature should survive will remain in effect, including ownership, disclaimers, and liability limits. We may update these Terms and will post material changes with a new effective date.",
+      "Questions about these Terms may be sent to getembur@gmail.com.",
     ],
   },
 ];
