@@ -46,3 +46,32 @@ test("null memory remains null and free text is not redacted", () => {
   assert.equal(result.ownerPreferences, null);
   assert.equal(result.question, question);
 });
+
+test("question truncates at 1000 and all other allowed strings at 500", () => {
+  const long = "x".repeat(501);
+  const input = { ...snapshot, businessHealthSummary: long, topPriority: { ...snapshot.topPriority, customer: { name: long, service: long, status: long }, reason: long, recommendedAction: long }, recommendations: [{ ...snapshot.recommendations[0], title: long, description: long, id: long, customerId: long }] };
+  const ask = buildAtlasAskOpenAIInput("q".repeat(1001), input, { ...memory, ownerName: long });
+  assert.equal(ask.question.length, 1000);
+  function check(value: unknown) {
+    if (typeof value === "string") assert.ok(value.length <= 500);
+    else if (value && typeof value === "object") Object.values(value).forEach(check);
+  }
+  check(ask.ownerPreferences); check(ask.businessSnapshot);
+  check(buildAtlasBriefOpenAIInput(input, { ...memory, ownerName: long }));
+  assert.equal((ask.businessSnapshot as Record<string, unknown>).businessHealthSummary, long.slice(0, 500));
+});
+
+test("recommendations truncate to ten in both payloads", () => {
+  const input = { ...snapshot, recommendations: Array.from({ length: 11 }, () => snapshot.recommendations[0]) };
+  assert.equal(buildAtlasAskOpenAIInput("test", input, memory).businessSnapshot.recommendations.length, 10);
+  assert.equal(buildAtlasBriefOpenAIInput(input, memory).recommendations.length, 10);
+});
+
+test("huge strings truncate without throwing and malformed inputs are safe", () => {
+  const huge = "x".repeat(2_000_000);
+  assert.equal(buildAtlasAskOpenAIInput(huge, snapshot, null).question.length, 1000);
+  assert.equal(buildAtlasBriefOpenAIInput(snapshot, { ownerName: huge }).ownerName.length, 500);
+  const bad = new Proxy({}, { get() { throw new Error("synthetic getter"); } });
+  assert.doesNotThrow(() => buildAtlasAskOpenAIInput(null, bad, bad));
+  assert.doesNotThrow(() => buildAtlasBriefOpenAIInput(bad, bad));
+});
