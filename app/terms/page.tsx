@@ -16,11 +16,11 @@ const sections = [
       "Any future paid offering will state its price, billing interval, cancellation terms, and applicable refund policy before purchase. Contact getembur@gmail.com with questions about existing billing records.",
     ],
   },
-  { title: "Communications and outreach", paragraphs: ["Call handling, booking, referrals, automated messaging, and traffic agents are not live services. You are responsible for ensuring that your own communications and any future use of outreach features comply with applicable laws, platform rules, consent requirements, opt-out requirements, and do-not-contact restrictions. Do not use EMBUR to send deceptive, abusive, unlawful, or unsolicited communications."] },
+  { title: "Communications and outreach", paragraphs: ["Call handling, booking, referrals, reputation tools, content and video tools, automated messaging, and traffic agents are not live services. You are responsible for ensuring that your own communications and any future use of outreach features comply with applicable laws, platform rules, consent requirements, opt-out requirements, and do-not-contact restrictions. Do not use EMBUR to send deceptive, abusive, unlawful, or unsolicited communications."] },
   {
     title: "AI-assisted features",
     paragraphs: [
-      "EMBUR may produce summaries, drafts, priorities, recommendations, and other AI-assisted output. Output is provided as a working aid, may contain errors, and does not replace professional judgment. Review output before sending or acting on it.",
+      "Atlas suggests priorities and next steps for the inquiries in your workspace. Depending on how EMBUR is configured, suggestions may come from rules built into EMBUR or from an AI model provided by OpenAI. Suggestions may be incomplete or wrong, and you remain responsible for reviewing them before you act or send anything to a customer.",
       "EMBUR is not an emergency service and does not provide legal, tax, medical, financial, trade, or safety advice. If a situation may involve immediate danger, contact 911 or the appropriate emergency or utility service.",
     ],
   },
@@ -30,7 +30,6 @@ const sections = [
       "Do not break the law, violate another person’s rights, impersonate others, or submit information you have no right to use.",
       "Do not probe, disrupt, overload, reverse engineer, copy, resell, or bypass security or access controls except where law expressly permits.",
       "Do not use EMBUR to distribute malware, spam, harassment, discrimination, fraud, or misleading claims.",
-      "Do not use generated content or automation without the review, disclosures, permissions, and approvals required for your business.",
     ],
   },
   { title: "Availability and changes", paragraphs: ["We work to keep EMBUR dependable, but do not promise uninterrupted or error-free operation. Features may change as the product improves. We may suspend access when necessary for security, maintenance, legal compliance, or material violation of these Terms."] },
