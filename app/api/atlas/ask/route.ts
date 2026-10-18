@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getOpenAIClient } from "@/lib/openai";
+import { readAtlasRequestBody } from "@/lib/intelligence/atlasRequestBody";
 import { buildAtlasAskOpenAIInput } from "@/lib/intelligence/atlasOpenAIInput";
 import { buildDeterministicAtlasAnswer } from "@/lib/intelligence/atlasBriefFallback";
 import type { AtlasMemory } from "@/lib/intelligence/memory/types";
@@ -47,8 +48,13 @@ export async function POST(request: Request) {
       );
     }
 
-    const body =
-      (await request.json()) as AskAtlasRequest;
+    const parsed = await readAtlasRequestBody(request);
+    if (!parsed.ok) {
+      return NextResponse.json({ success: false, message: parsed.message }, { status: parsed.status });
+    }
+    const body = parsed.value as AskAtlasRequest;
+
+
 
     const question = body.question?.trim();
 
