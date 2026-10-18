@@ -32,7 +32,7 @@ export default function LegalPage({
           <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-[#8fb4ff]">{eyebrow}</p>
           <h1 className="font-display mt-5 text-5xl font-semibold tracking-[-0.05em] md:text-7xl">{title}</h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-[#a8b9d4]">{summary}</p>
-          <p className="mt-5 text-sm font-semibold text-[#7188ad]">Effective July 25, 2026</p>
+          <p className="mt-5 text-sm font-semibold text-[#7188ad]">Effective October 18, 2026</p>
         </div>
       </section>
 
