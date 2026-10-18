@@ -4,6 +4,7 @@ import {
   buildDeterministicAtlasBrief,
 } from "@/lib/intelligence/atlasBriefFallback";
 import { getOpenAIClient } from "@/lib/openai";
+import { readAtlasRequestBody } from "@/lib/intelligence/atlasRequestBody";
 import { buildAtlasBriefOpenAIInput } from "@/lib/intelligence/atlasOpenAIInput";
 import type { AtlasMemory } from "@/lib/intelligence/memory/types";
 import type { AtlasSnapshot } from "@/lib/intelligence/types";
@@ -73,23 +74,11 @@ export async function POST(
       );
     }
 
-    let body: AtlasBriefRequest;
-
-    try {
-      body =
-        (await request.json()) as AtlasBriefRequest;
-    } catch {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "The Atlas briefing request was not valid JSON.",
-        },
-        {
-          status: 400,
-        }
-      );
+    const parsed = await readAtlasRequestBody(request);
+    if (!parsed.ok) {
+      return NextResponse.json({ success: false, message: parsed.message }, { status: parsed.status });
     }
+    const body = parsed.value as AtlasBriefRequest;
 
     if (!body.snapshot) {
       return NextResponse.json(
