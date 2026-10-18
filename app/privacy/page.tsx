@@ -30,7 +30,7 @@ const sections = [
   {
     title: "AI and service providers",
     paragraphs: [
-      "EMBUR uses service providers to operate the product: Clerk for sign-in, Vercel for hosting, and Neon for database storage. Stripe handles payment data for any historical or future paid offering. OpenAI may process information from your workspace that Atlas uses to make suggestions, such as inquiry details and conversation text, when AI-model suggestions are enabled.",
+      "EMBUR uses service providers to operate the product: Clerk for sign-in, Vercel for hosting, and Neon for database storage. Stripe handles payment data for any historical or future paid offering. OpenAI may process information from your workspace that Atlas uses to make suggestions, such as customer names, service types, request status, estimated values, and questions you type to Atlas, when AI-model suggestions are enabled.",
       "Atlas suggestions may be incomplete or inaccurate. You remain responsible for reviewing communications and decisions before relying on them, especially for emergencies, pricing, advertising, legal, medical, financial, or safety-related matters.",
     ],
   },
