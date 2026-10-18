@@ -22,7 +22,7 @@ const sections = [
     bullets: [
       "Provide, secure, troubleshoot, and improve the EMBUR service.",
       "Organize leads, conversations, recommendations, and business activity inside the correct workspace.",
-      "Generate AI-assisted summaries, drafts, priorities, and suggested actions.",
+      "Rank inquiries and suggest next steps in Atlas, using rules built into EMBUR or, when enabled, an AI model.",
       "Maintain historical billing records, prevent fraud, respond to support requests, and provide essential service notices.",
       "Comply with law and enforce our agreements.",
     ],
@@ -30,13 +30,13 @@ const sections = [
   {
     title: "AI and service providers",
     paragraphs: [
-      "EMBUR uses trusted service providers to operate the product. These may include Clerk for authentication, Stripe for historical billing records and any future paid offering, OpenAI for AI-assisted features, Vercel for application hosting, and Neon for database infrastructure. Information is shared only as reasonably necessary for those providers to perform services for EMBUR.",
-      "AI output may be incomplete or inaccurate. Business owners remain responsible for reviewing communications and decisions before relying on them, especially for emergencies, pricing, advertising, legal, medical, financial, or safety-related matters.",
+      "EMBUR uses service providers to operate the product: Clerk for sign-in, Vercel for hosting, and Neon for database storage. Stripe handles payment data for any historical or future paid offering. OpenAI may process information from your workspace that Atlas uses to make suggestions, such as inquiry details and conversation text, when AI-model suggestions are enabled.",
+      "Atlas suggestions may be incomplete or inaccurate. You remain responsible for reviewing communications and decisions before relying on them, especially for emergencies, pricing, advertising, legal, medical, financial, or safety-related matters.",
     ],
   },
   {
     title: "Business customer responsibilities",
-    paragraphs: ["A business using EMBUR controls the customer information placed in its workspace and is responsible for providing any notices and obtaining any permissions required for calls, texts, email, recording, advertising, and customer outreach. EMBUR processes that information to provide the requested service."],
+    paragraphs: ["A business using EMBUR controls the customer information placed in its workspace and is responsible for providing any notices and obtaining any permissions required for calls, texts, email, recording, advertising, and customer outreach. EMBUR processes that information to provide the requested service. EMBUR does not currently place calls or send texts on a business's behalf."],
   },
   {
     title: "Sharing and sale of information",
