@@ -49,7 +49,7 @@ export default async function BlogPage() {
           </div>
         ) : (
           <div className="mt-12 rounded-[1.75rem] border border-[#dce4ef] bg-white p-8">
-            <h2 className="font-display text-2xl font-semibold">The first field note is being prepared.</h2>
+            <h2 className="font-display text-2xl font-semibold">Field notes will appear here.</h2>
             <p className="mt-3 text-[#66758d]">No field notes have been published yet.</p>
           </div>
         )}
