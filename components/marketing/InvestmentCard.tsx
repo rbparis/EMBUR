@@ -9,7 +9,7 @@ export default function InvestmentCard() {
         </div>
         <div className="mx-auto mt-12 max-w-3xl rounded-[1.75rem] border border-[#d5dfed] bg-white p-7 text-center shadow-[0_24px_70px_-45px_rgba(4,17,43,0.45)] md:p-9">
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-blue-700">Free pilot · 3–5 contractors</p>
-          <p className="mt-4 text-lg leading-8 text-slate-700">Join early access is not open yet. We will add the application form only after the pilot database, access controls, and Preview tests are approved.</p>
+          <p className="mt-4 text-lg leading-8 text-slate-700">Applications are not open yet. Questions about the pilot? Contact getembur@gmail.com.</p>
           <p className="mt-4 text-sm font-semibold text-slate-500">Future pricing under evaluation: $99/month after the pilot. No price is final.</p>
         </div>
       </div>

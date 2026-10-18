@@ -4,12 +4,12 @@ import EmburLogo from "@/components/brand/EmburLogo";
 
 export const metadata: Metadata = {
   title: "Support",
-  description: "Get help with your EMBUR account, billing, workspace, or after-hours intake.",
+  description: "Contact EMBUR about account access, web intake, the workspace, or the planned pilot.",
 };
 
 const help = [
   { title: "Account access", body: "Include the email used for EMBUR and describe what happens when you sign in." },
-  { title: "Billing", body: "Include the charge date and amount. Never email a full card number or secret key." },
+  { title: "Pilot and billing questions", body: "Paid enrollment is paused. For a historical charge question, include the date and amount. Never email a full card number or secret key." },
   { title: "Workspace help", body: "Tell us the page, the action you tried, and the exact message you saw." },
   { title: "Lead intake", body: "Include your business name and intake link. Do not send sensitive customer information unless requested." },
 ];
@@ -28,8 +28,8 @@ export default function SupportPage() {
         <div className="relative mx-auto max-w-6xl">
           <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-orange-200">Real help</p>
           <h1 className="font-display mt-5 max-w-4xl text-5xl font-semibold tracking-[-0.05em] md:text-7xl">Tell us what is blocking the business.</h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-[#a8b9d4]">We will help with account access, billing, setup, or a workspace issue.</p>
-          <a href="mailto:hello@getembur.com?subject=EMBUR%20support%20request" className="mt-8 inline-flex min-h-14 items-center rounded-full bg-[#ff6a3d] px-7 font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-[#ff7a52]">Email EMBUR support</a>
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-[#a8b9d4]">Contact us about account access, web intake, setup, or a workspace issue. Paid enrollment is paused; applications for the planned free pilot are not open yet.</p>
+          <a href="mailto:getembur@gmail.com?subject=EMBUR%20support%20request" className="mt-8 inline-flex min-h-14 items-center rounded-full bg-[#ff6a3d] px-7 font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-[#ff7a52]">Email EMBUR support</a>
         </div>
       </section>
       <section className="mx-auto max-w-6xl px-5 py-12 md:px-8 md:py-16">

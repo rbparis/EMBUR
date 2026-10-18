@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Field Notes for Local Service Owners",
-  description: "Practical guidance on missed calls, customer follow-up, local service growth, and earning more from the demand you already have.",
+  description: "Notes on web intake, organized customer records, and owner-led follow-up.",
   alternates: { canonical: "https://getembur.com/blog" },
 };
 
@@ -29,8 +29,8 @@ export default async function BlogPage() {
 
       <section className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
         <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-[#1555c6]">EMBUR field notes</p>
-        <h1 className="font-display mt-4 max-w-4xl text-4xl font-semibold leading-tight md:text-6xl">Practical ways to turn more calls into more jobs.</h1>
-        <p className="mt-5 max-w-2xl text-lg leading-8 text-[#60718d]">Clear, useful guidance for independent service owners. No empty promises. Just stronger follow-up, better customer care, and more revenue from work already within reach.</p>
+        <h1 className="font-display mt-4 max-w-4xl text-4xl font-semibold leading-tight md:text-6xl">Notes on organized customer follow-up.</h1>
+        <p className="mt-5 max-w-2xl text-lg leading-8 text-[#60718d]">Notes for independent service owners about web inquiries, customer records, and follow-up. Examples are illustrative, not customer results.</p>
 
         {posts.length ? (
           <div className="mt-12 grid gap-5 md:grid-cols-2">
@@ -49,8 +49,8 @@ export default async function BlogPage() {
           </div>
         ) : (
           <div className="mt-12 rounded-[1.75rem] border border-[#dce4ef] bg-white p-8">
-            <h2 className="font-display text-2xl font-semibold">The first field note is being prepared.</h2>
-            <p className="mt-3 text-[#66758d]">Rank is building useful guidance for local service owners. Check back soon.</p>
+            <h2 className="font-display text-2xl font-semibold">Field notes will appear here.</h2>
+            <p className="mt-3 text-[#66758d]">No field notes have been published yet.</p>
           </div>
         )}
       </section>

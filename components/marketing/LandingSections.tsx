@@ -63,7 +63,7 @@ export function ProductStory() {
             <ProductPoint title="Automation with your approval" body="Atlas prepares the next move. You decide what gets sent and when." />
             <ProductPoint title="Results you can measure" body="Recovered jobs and returned hours become a visible operating record." />
           </div>
-          <Link href="/#early-access" className="mt-10 inline-flex items-center gap-2 rounded-full bg-[#071832] px-6 py-3.5 font-extrabold text-white shadow-lg shadow-blue-950/20 transition hover:-translate-y-0.5 hover:bg-[#1555c6]">Join early access <span>→</span></Link>
+          <Link href="mailto:getembur@gmail.com" className="mt-10 inline-flex items-center gap-2 rounded-full bg-[#071832] px-6 py-3.5 font-extrabold text-white shadow-lg shadow-blue-950/20 transition hover:-translate-y-0.5 hover:bg-[#1555c6]">Ask about the pilot <span>→</span></Link>
         </div>
 
         <div className="relative">
@@ -112,7 +112,7 @@ export function AfterHoursSection() {
             <AfterHoursPoint number="03" title="Escalate responsibly" body="Flag urgent needs while keeping emergency guidance clear." />
             <AfterHoursPoint number="04" title="Start ready" body="Wake up to an organized lead and a recommended action." />
           </div>
-          <Link href="/#early-access" className="mt-10 inline-flex min-h-14 items-center justify-center rounded-full bg-[#ff6a3d] px-7 font-extrabold text-white shadow-xl shadow-orange-950/30 transition hover:-translate-y-0.5 hover:bg-[#ff7a52]">Join early access →</Link>
+          <Link href="mailto:getembur@gmail.com" className="mt-10 inline-flex min-h-14 items-center justify-center rounded-full bg-[#ff6a3d] px-7 font-extrabold text-white shadow-xl shadow-orange-950/30 transition hover:-translate-y-0.5 hover:bg-[#ff7a52]">Ask about the pilot →</Link>
         </div>
 
         <div className="relative">
@@ -161,7 +161,7 @@ export function FinalCta() {
       <div className="pointer-events-none absolute right-0 top-0 h-80 w-80 rounded-full bg-blue-500/20 blur-[110px]" />
       <div className="relative mx-auto flex max-w-[90rem] flex-col items-start justify-between gap-10 lg:flex-row lg:items-end">
         <div className="max-w-4xl"><p className="text-xs font-bold uppercase tracking-[0.2em] text-orange-200">Enough talk</p><h2 className="font-display mt-5 text-5xl font-semibold leading-[0.92] tracking-[-0.055em] md:text-8xl">Put them<br />to work.</h2></div>
-        <Link href="/#early-access" className="inline-flex min-h-14 shrink-0 items-center justify-center rounded-full bg-[#ff6a3d] px-7 font-extrabold shadow-xl shadow-orange-950/30 transition hover:-translate-y-0.5 hover:bg-[#ff7a52]">Join early access</Link>
+        <Link href="mailto:getembur@gmail.com" className="inline-flex min-h-14 shrink-0 items-center justify-center rounded-full bg-[#ff6a3d] px-7 font-extrabold shadow-xl shadow-orange-950/30 transition hover:-translate-y-0.5 hover:bg-[#ff7a52]">Ask about the pilot</Link>
       </div>
     </section>
   );
