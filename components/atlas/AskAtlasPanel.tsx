@@ -139,6 +139,7 @@ export default function AskAtlasPanel({
             : "Ask Atlas"}
         </button>
       </form>
+      <p className="mt-2 text-sm text-slate-500">{"Don't type customers' phone numbers or emails."}</p>
 
       {answer && (
         <div className="mt-6 rounded-2xl border border-blue-200 bg-blue-50 p-6">
