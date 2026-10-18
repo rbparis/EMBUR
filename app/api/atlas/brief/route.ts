@@ -4,6 +4,8 @@ import {
   buildDeterministicAtlasBrief,
 } from "@/lib/intelligence/atlasBriefFallback";
 import { getOpenAIClient } from "@/lib/openai";
+import { readAtlasRequestBody } from "@/lib/intelligence/atlasRequestBody";
+import { buildAtlasBriefOpenAIInput } from "@/lib/intelligence/atlasOpenAIInput";
 import type { AtlasMemory } from "@/lib/intelligence/memory/types";
 import type { AtlasSnapshot } from "@/lib/intelligence/types";
 
@@ -72,23 +74,11 @@ export async function POST(
       );
     }
 
-    let body: AtlasBriefRequest;
-
-    try {
-      body =
-        (await request.json()) as AtlasBriefRequest;
-    } catch {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "The Atlas briefing request was not valid JSON.",
-        },
-        {
-          status: 400,
-        }
-      );
+    const parsed = await readAtlasRequestBody(request);
+    if (!parsed.ok) {
+      return NextResponse.json({ success: false, message: parsed.message }, { status: parsed.status });
     }
+    const body = parsed.value as AtlasBriefRequest;
 
     if (!body.snapshot) {
       return NextResponse.json(
@@ -128,9 +118,6 @@ export async function POST(
       );
     }
 
-    const ownerName =
-      memory?.ownerName?.trim() || "Owner";
-
     try {
       const client = getOpenAIClient();
 
@@ -151,126 +138,7 @@ export async function POST(
             "Keep the briefing between 80 and 140 words.",
           ].join(" "),
 
-          input: JSON.stringify({
-            ownerName,
-
-            preferences: {
-              briefLength:
-                memory?.preferredBriefLength ??
-                "short",
-
-              communication:
-                memory?.preferredCommunication ??
-                "call",
-
-              emergencyFirst:
-                memory?.emergencyFirst ??
-                true,
-
-              preferredStartHour:
-                memory?.preferredStartHour ??
-                8,
-
-              expectedResponseMinutes:
-                memory?.averageResponseMinutes ??
-                15,
-            },
-
-            business: {
-              health:
-                snapshot.businessHealth,
-
-              healthSummary:
-                snapshot.businessHealthSummary,
-
-              revenueAtRisk:
-                snapshot.revenueAtRisk,
-
-              pipeline:
-                snapshot.forecast.pipeline,
-
-              expectedRevenue:
-                snapshot.forecast
-                  .expectedRevenue,
-
-              expectedAppointments:
-                snapshot.forecast
-                  .expectedAppointments,
-
-              waitingCustomers:
-                snapshot.metrics
-                  .waitingCustomers,
-
-              bookedCustomers:
-                snapshot.metrics
-                  .bookedCustomers,
-
-              followUpCustomers:
-                snapshot.metrics
-                  .followUpCustomers,
-
-              totalCustomers:
-                snapshot.metrics
-                  .totalCustomers,
-            },
-
-            topPriority: {
-              customerName:
-                snapshot.topPriority
-                  .customer.name,
-
-              service:
-                snapshot.topPriority
-                  .customer.service,
-
-              status:
-                snapshot.topPriority
-                  .customer.status,
-
-              estimatedValue:
-                snapshot.topPriority
-                  .estimatedValue,
-
-              score:
-                snapshot.topPriority.score,
-
-              confidence:
-                snapshot.topPriority
-                  .confidence,
-
-              riskLevel:
-                snapshot.topPriority
-                  .riskLevel,
-
-              reason:
-                snapshot.topPriority.reason,
-
-              recommendedAction:
-                snapshot.topPriority
-                  .recommendedAction,
-            },
-
-            recommendations:
-              snapshot.recommendations.map(
-                (recommendation) => ({
-                  title:
-                    recommendation.title,
-
-                  description:
-                    recommendation.description,
-
-                  actionType:
-                    recommendation.actionType,
-
-                  riskLevel:
-                    recommendation.riskLevel,
-
-                  estimatedValue:
-                    recommendation
-                      .estimatedValue,
-                })
-              ),
-          }),
+          input: JSON.stringify(buildAtlasBriefOpenAIInput(snapshot, memory)),
         });
 
       const brief =

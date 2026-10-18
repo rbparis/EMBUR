@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getOpenAIClient } from "@/lib/openai";
+import { readAtlasRequestBody } from "@/lib/intelligence/atlasRequestBody";
+import { buildAtlasAskOpenAIInput } from "@/lib/intelligence/atlasOpenAIInput";
 import { buildDeterministicAtlasAnswer } from "@/lib/intelligence/atlasBriefFallback";
 import type { AtlasMemory } from "@/lib/intelligence/memory/types";
 import type { AtlasSnapshot } from "@/lib/intelligence/types";
@@ -46,8 +48,13 @@ export async function POST(request: Request) {
       );
     }
 
-    const body =
-      (await request.json()) as AskAtlasRequest;
+    const parsed = await readAtlasRequestBody(request);
+    if (!parsed.ok) {
+      return NextResponse.json({ success: false, message: parsed.message }, { status: parsed.status });
+    }
+    const body = parsed.value as AskAtlasRequest;
+
+
 
     const question = body.question?.trim();
 
@@ -112,71 +119,7 @@ export async function POST(request: Request) {
           "Keep the answer under 130 words.",
         ].join(" "),
 
-        input: JSON.stringify({
-          question,
-
-          ownerPreferences:
-            body.memory ?? null,
-
-          businessSnapshot: {
-            businessHealth:
-              body.snapshot.businessHealth,
-
-            businessHealthSummary:
-              body.snapshot
-                .businessHealthSummary,
-
-            revenueAtRisk:
-              body.snapshot.revenueAtRisk,
-
-            forecast:
-              body.snapshot.forecast,
-
-            metrics:
-              body.snapshot.metrics,
-
-            topPriority: {
-              customerName:
-                body.snapshot.topPriority
-                  .customer.name,
-
-              service:
-                body.snapshot.topPriority
-                  .customer.service,
-
-              status:
-                body.snapshot.topPriority
-                  .customer.status,
-
-              score:
-                body.snapshot.topPriority
-                  .score,
-
-              confidence:
-                body.snapshot.topPriority
-                  .confidence,
-
-              riskLevel:
-                body.snapshot.topPriority
-                  .riskLevel,
-
-              estimatedValue:
-                body.snapshot.topPriority
-                  .estimatedValue,
-
-              reason:
-                body.snapshot.topPriority
-                  .reason,
-
-              recommendedAction:
-                body.snapshot.topPriority
-                  .recommendedAction,
-            },
-
-            recommendations:
-              body.snapshot.recommendations,
-          },
-        }),
+        input: JSON.stringify(buildAtlasAskOpenAIInput(question, body.snapshot, body.memory)),
         });
 
       const answer =
