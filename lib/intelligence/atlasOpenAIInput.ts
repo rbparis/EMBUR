@@ -16,7 +16,7 @@ function pickScalars(value: unknown, fields: readonly string[]): Fields {
     const item = source[field];
     if (item === null || typeof item === "string" || typeof item === "boolean" ||
         (typeof item === "number" && Number.isFinite(item))) {
-      result[field] = item;
+      result[field] = typeof item === "string" ? item.slice(0, 500) : item;
     }
   }
   return result;
@@ -49,10 +49,10 @@ function recommendations(snapshot: Fields, includeIds: boolean) {
   const fields = includeIds
     ? ["id", "customerId", ...recommendationFields]
     : recommendationFields;
-  return snapshot.recommendations.map(item => pickScalars(item, fields));
+  return snapshot.recommendations.slice(0, 10).map(item => pickScalars(item, fields));
 }
 
-export function buildAtlasBriefOpenAIInput(snapshot: unknown, memory: unknown) {
+function briefInput(snapshot: unknown, memory: unknown) {
   const data = record(snapshot);
   const preferences = pickScalars(memory, memoryFields);
   const forecast = pickScalars(data.forecast, forecastFields);
@@ -80,10 +80,10 @@ export function buildAtlasBriefOpenAIInput(snapshot: unknown, memory: unknown) {
   };
 }
 
-export function buildAtlasAskOpenAIInput(question: string, snapshot: unknown, memory: unknown) {
+function askInput(question: string, snapshot: unknown, memory: unknown) {
   const data = record(snapshot);
   return {
-    question: question.trim(),
+    question: question.trim().slice(0, 1000),
     ownerPreferences: memory == null ? null : pickScalars(memory, memoryFields),
     businessSnapshot: {
       ...pickScalars(data, ["businessHealth", "businessHealthSummary", "revenueAtRisk"]),
@@ -93,4 +93,17 @@ export function buildAtlasAskOpenAIInput(question: string, snapshot: unknown, me
       recommendations: recommendations(data, true),
     },
   };
+}
+
+
+// Catch malformed values (including throwing getters/proxies), never coerce objects.
+export function buildAtlasBriefOpenAIInput(snapshot: unknown, memory: unknown) {
+  try { return briefInput(snapshot, memory); }
+  catch { return briefInput({}, null); }
+}
+
+export function buildAtlasAskOpenAIInput(question: unknown, snapshot: unknown, memory: unknown) {
+  const text = typeof question === "string" ? question : "";
+  try { return askInput(text, snapshot, memory); }
+  catch { return askInput(text, {}, null); }
 }
