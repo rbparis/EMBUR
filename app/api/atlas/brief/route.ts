@@ -15,12 +15,14 @@ export const dynamic = "force-dynamic";
 type AtlasBriefRequest = {
   snapshot?: AtlasSnapshot;
   memory?: AtlasMemory | null;
+  viewerTimeZone?: string;
 };
 
 function createRulesResponse(
   snapshot: AtlasSnapshot,
   memory?: AtlasMemory | null,
-  reason?: string
+  reason?: string,
+  viewerTimeZone?: string
 ) {
   return NextResponse.json(
     {
@@ -28,7 +30,8 @@ function createRulesResponse(
       brief:
         buildDeterministicAtlasBrief(
           snapshot,
-          memory
+          memory,
+          viewerTimeZone
         ),
       source: "rules",
       degraded: true,
@@ -95,6 +98,7 @@ export async function POST(
 
     const snapshot = body.snapshot;
     const memory = body.memory;
+    const viewerTimeZone = typeof body.viewerTimeZone === "string" ? body.viewerTimeZone : undefined;
 
     const apiKey =
       process.env.OPENAI_API_KEY?.trim();
@@ -106,7 +110,8 @@ export async function POST(
       return createRulesResponse(
         snapshot,
         memory,
-        "OPENAI_API_KEY is not configured."
+        "OPENAI_API_KEY is not configured.",
+        viewerTimeZone
       );
     }
 
@@ -114,7 +119,8 @@ export async function POST(
       return createRulesResponse(
         snapshot,
         memory,
-        "OPENAI_MODEL is not configured."
+        "OPENAI_MODEL is not configured.",
+        viewerTimeZone
       );
     }
 
@@ -134,6 +140,7 @@ export async function POST(
             "Do not sound like a chatbot.",
             "Give one clear first action.",
             "Do not claim that EMBUR completed an action.",
+            "Do not include a greeting; the client adds one in the viewer's timezone.",
             "Do not use markdown headings, bullet points, or emojis.",
             "Keep the briefing between 80 and 140 words.",
           ].join(" "),
@@ -148,7 +155,8 @@ export async function POST(
         return createRulesResponse(
           snapshot,
           memory,
-          "OpenAI returned an empty briefing."
+          "OpenAI returned an empty briefing.",
+          viewerTimeZone
         );
       }
 
@@ -177,7 +185,8 @@ export async function POST(
       return createRulesResponse(
         snapshot,
         memory,
-        reason
+        reason,
+        viewerTimeZone
       );
     }
   } catch (error) {

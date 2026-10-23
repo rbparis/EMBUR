@@ -1,9 +1,10 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import EmburLogo from "@/components/brand/EmburLogo";
 
 export type LegalSection = {
   title: string;
-  paragraphs?: string[];
+  paragraphs?: ReactNode[];
   bullets?: string[];
 };
 
@@ -51,7 +52,7 @@ export default function LegalPage({
             <section id={`section-${index + 1}`} key={section.title} className="border-b border-[#e3e9f2] p-6 last:border-b-0 md:p-9">
               <h2 className="font-display text-2xl font-semibold tracking-tight md:text-3xl">{section.title}</h2>
               <div className="mt-4 space-y-4 text-[15px] leading-7 text-[#596a85] md:text-base">
-                {section.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                {section.paragraphs?.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
                 {section.bullets && <ul className="space-y-3 pl-5">{section.bullets.map((bullet) => <li key={bullet} className="list-disc pl-1">{bullet}</li>)}</ul>}
               </div>
             </section>

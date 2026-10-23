@@ -50,7 +50,7 @@ const sections = [
     title: "Your choices and rights",
     paragraphs: [
       "Depending on where you live, you may have rights to access, correct, delete, restrict, or receive a copy of certain personal information. You may also withdraw consent where consent is the basis for processing. Account owners can update much of their information inside EMBUR.",
-      "To make a privacy request, email getembur@gmail.com. We may need to verify your identity and authority before completing a request.",
+      <>To make a privacy request, including a request to delete your EMBUR account, email <a href="mailto:getembur@gmail.com" className="underline">getembur@gmail.com</a>. We may need to verify your identity and authority before completing a request.</>,
     ],
   },
   {

@@ -65,7 +65,7 @@ export async function GET() {
         update: {},
         create: {
           businessId: authenticated.business.id,
-          ownerName: "Mike",
+          ownerName: "",
           preferredBriefLength: "short",
           preferredCommunication: "call",
           emergencyFirst: true,

@@ -145,6 +145,7 @@ export default function AtlasMemorySettings() {
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         <Field label="Owner name">
           <input
+            placeholder="Your name (optional)"
             value={memory.ownerName}
             onChange={(event) =>
               updateField(

@@ -1,3 +1,6 @@
+"use client";
+
+import { useViewerTimeZone } from "./useViewerTimeZone";
 import type { AtlasMemory } from "@/lib/intelligence/memory/types";
 import type { AtlasSnapshot } from "@/lib/intelligence/types";
 import { createAtlasExecutiveBrief } from "@/lib/intelligence/briefEngine";
@@ -11,9 +14,11 @@ export default function AtlasExecutiveBrief({
   snapshot,
   memory,
 }: AtlasExecutiveBriefProps) {
+  const viewerTimeZone = useViewerTimeZone();
   const brief = createAtlasExecutiveBrief(
     snapshot,
-    memory
+    memory,
+    viewerTimeZone
   );
 
   return (
