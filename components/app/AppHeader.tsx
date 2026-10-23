@@ -2,6 +2,7 @@
 
 import type { AppPage } from "@/components/app/AppSidebar";
 import EmburIcon from "@/components/ui/EmburIcon";
+import WorkspaceAccountControls from "@/components/app/WorkspaceAccountControls";
 
 const pageCopy: Record<AppPage, { eyebrow: string; title: string; description: string }> = {
   Today: { eyebrow: "Today", title: "Money on the board.", description: "See the first move and the agents working behind it." },
@@ -18,7 +19,7 @@ export default function AppHeader({ activePage, selectedCustomerName, onOpenAgen
 
   return (
     <header className="rounded-[1.75rem] border border-white/80 bg-white/75 p-5 shadow-[0_18px_55px_-38px_rgba(4,17,43,0.45)] backdrop-blur-xl md:p-7">
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-wrap items-start justify-between gap-5">
         <div>
           <div className="flex items-center gap-3">
             <p className="text-xs font-extrabold uppercase tracking-[0.19em] text-[#1555c6]">{selectedCustomerName ? "Customer 360" : copy.eyebrow}</p>
@@ -27,9 +28,12 @@ export default function AppHeader({ activePage, selectedCustomerName, onOpenAgen
           <h2 className="font-display mt-2 text-3xl font-semibold tracking-[-0.035em] text-[#06142f] md:text-4xl">{selectedCustomerName ?? copy.title}</h2>
           <p className="mt-2 text-[#66758d]">{selectedCustomerName ? "Complete customer context and the strongest next action." : copy.description}</p>
         </div>
+        <div className="ml-auto flex flex-wrap items-center justify-end gap-3">
+          <div className="flex items-center gap-2"><span className="text-sm font-semibold">Account</span><WorkspaceAccountControls /></div>
         {activePage !== "Agents" && !selectedCustomerName && <button onClick={onOpenAgents} className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#06142f] px-5 font-extrabold text-white shadow-lg shadow-blue-950/20 transition hover:-translate-y-0.5 hover:bg-[#1555c6]">
           <EmburIcon name="star" size={18} /> View agents
         </button>}
+        </div>
       </div>
     </header>
   );

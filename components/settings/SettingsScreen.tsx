@@ -15,14 +15,14 @@ type BusinessSettings = {
 };
 
 const defaultSettings: BusinessSettings = {
-  businessName: "Mike's Heating & Air",
-  businessPhone: "(555) 555-1212",
+  businessName: "",
+  businessPhone: "",
   openingTime: "07:00",
   closingTime: "18:00",
-  afterHoursFollowUp: true,
-  reviewRequests: true,
-  ownerNotifications: true,
-  appointmentConfirmations: true,
+  afterHoursFollowUp: false,
+  reviewRequests: false,
+  ownerNotifications: false,
+  appointmentConfirmations: false,
 };
 
 const storageKey = "embur-business-settings";
@@ -194,7 +194,7 @@ export default function SettingsScreen() {
                 <SettingsField
                   label="Business name"
                   value={settings.businessName}
-                  placeholder="Mike's Heating & Air"
+                  placeholder="Business name"
                   onChange={(value) =>
                     updateTextField("businessName", value)
                   }
@@ -203,7 +203,7 @@ export default function SettingsScreen() {
                 <SettingsField
                   label="Business phone"
                   value={settings.businessPhone}
-                  placeholder="(555) 555-1212"
+                  placeholder="Business phone number"
                   type="tel"
                   onChange={(value) =>
                     updateTextField("businessPhone", value)
@@ -386,8 +386,6 @@ function SettingsField({
 function SettingToggle({
   title,
   description,
-  enabled,
-  onToggle,
 }: {
   title: string;
   description: string;
@@ -401,23 +399,20 @@ function SettingToggle({
 
         <p className="mt-1 text-sm leading-relaxed text-slate-500">
           {description}
+          <span className="ml-2 font-semibold">Not live</span>
         </p>
       </div>
 
       <button
         type="button"
         role="switch"
-        aria-checked={enabled}
-        aria-label={`${title}: ${enabled ? "enabled" : "disabled"}`}
-        onClick={onToggle}
-        className={`relative h-8 w-14 shrink-0 rounded-full transition-colors duration-200 ${
-          enabled ? "bg-blue-600" : "bg-slate-300"
-        }`}
+        disabled
+        aria-checked={false}
+        aria-label={`${title}: Not live`}
+        className="relative h-8 w-14 shrink-0 rounded-full bg-slate-300 transition-colors duration-200"
       >
         <span
-          className={`absolute top-1 h-6 w-6 rounded-full bg-white shadow-sm transition-transform duration-200 ${
-            enabled ? "translate-x-7" : "translate-x-1"
-          }`}
+          className="absolute top-1 h-6 w-6 translate-x-1 rounded-full bg-white shadow-sm transition-transform duration-200"
         />
       </button>
     </div>

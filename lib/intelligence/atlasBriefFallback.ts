@@ -1,3 +1,4 @@
+import { viewerGreeting } from "@/lib/intelligence/viewerGreeting";
 import type { AtlasMemory } from "@/lib/intelligence/memory/types";
 import type { AtlasSnapshot } from "@/lib/intelligence/types";
 
@@ -9,26 +10,13 @@ function formatCurrency(value: number): string {
   }).format(Number.isFinite(value) ? value : 0);
 }
 
-function getGreeting(): string {
-  const hour = new Date().getHours();
-
-  if (hour < 12) {
-    return "Good morning";
-  }
-
-  if (hour < 18) {
-    return "Good afternoon";
-  }
-
-  return "Good evening";
-}
-
 export function buildDeterministicAtlasBrief(
   snapshot: AtlasSnapshot,
-  memory?: AtlasMemory | null
+  memory?: AtlasMemory | null,
+  viewerTimeZone?: string
 ): string {
   const ownerName =
-    memory?.ownerName?.trim() || "Owner";
+    memory?.ownerName?.trim() || "";
 
   const topPriority = snapshot.topPriority;
   const customer = topPriority.customer;
@@ -65,7 +53,7 @@ export function buildDeterministicAtlasBrief(
       : "After that, continue monitoring new customer activity.";
 
   return [
-    `${getGreeting()}, ${ownerName}.`,
+    viewerGreeting(ownerName, viewerTimeZone),
     `Your business health is ${snapshot.businessHealth} out of 100.`,
     `${formatCurrency(
       revenueAtRisk
@@ -86,7 +74,7 @@ export function buildDeterministicAtlasBrief(
     `The current pipeline is expected to produce approximately ${formatCurrency(
       expectedRevenue
     )}.`,
-  ].join(" ");
+  ].filter(Boolean).join(" ");
 }
 
 export function buildDeterministicAtlasAnswer(

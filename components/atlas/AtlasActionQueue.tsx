@@ -200,7 +200,7 @@ export default function AtlasActionQueue({
           </h2>
 
           <p className="mt-3 max-w-3xl leading-relaxed text-slate-600">
-            Approve it. The assigned agent takes it from there.
+            Atlas suggests next steps for you to review. It does not contact customers or take actions for you.
           </p>
         </div>
 
@@ -317,7 +317,7 @@ export default function AtlasActionQueue({
                           : status ===
                               "approved"
                             ? "Approved ✓"
-                            : "Approve"}
+                            : "Save decision"}
                       </button>
 
                       <button

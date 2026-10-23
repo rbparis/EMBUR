@@ -18,7 +18,7 @@ export interface AtlasMemory {
 }
 
 export const defaultAtlasMemory: AtlasMemory = {
-  ownerName: "Owner",
+  ownerName: "",
   preferredBriefLength: "short",
   preferredCommunication: "call",
   emergencyFirst: true,

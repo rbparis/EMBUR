@@ -3,6 +3,7 @@ import {
 } from "@/lib/intelligence/atlasBriefFallback";
 import type { AtlasMemory } from "@/lib/intelligence/memory/types";
 import type { AtlasSnapshot } from "@/lib/intelligence/types";
+import { viewerGreeting } from "@/lib/intelligence/viewerGreeting";
 
 export type AtlasBriefSource =
   | "openai"
@@ -32,12 +33,14 @@ function shouldUseLocalFallback(
 
 export async function fetchAtlasAiBrief(
   snapshot: AtlasSnapshot,
-  memory?: AtlasMemory | null
+  memory?: AtlasMemory | null,
+  viewerTimeZone?: string
 ): Promise<AtlasBriefResult> {
   const deterministicBrief =
     buildDeterministicAtlasBrief(
       snapshot,
-      memory
+      memory,
+      viewerTimeZone
     );
 
   try {
@@ -54,6 +57,7 @@ export async function fetchAtlasAiBrief(
         body: JSON.stringify({
           snapshot,
           memory,
+          viewerTimeZone,
         }),
       }
     );
@@ -95,7 +99,9 @@ export async function fetchAtlasAiBrief(
     }
 
     return {
-      brief: result.brief,
+      brief: result.source === "openai"
+        ? [viewerGreeting(memory?.ownerName, viewerTimeZone), result.brief].filter(Boolean).join(" ")
+        : result.brief,
       source:
         result.source === "openai"
           ? "openai"

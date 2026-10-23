@@ -4,6 +4,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useViewerTimeZone } from "./useViewerTimeZone";
 import AtlasExecutiveBrief from "@/components/atlas/AtlasExecutiveBrief";
 import {
   buildDeterministicAtlasBrief,
@@ -30,6 +31,7 @@ export default function AtlasAiExecutiveBrief({
   snapshot,
   memory,
 }: AtlasAiExecutiveBriefProps) {
+  const viewerTimeZone = useViewerTimeZone();
   const [state, setState] =
     useState<BriefState>({
       status: "loading",
@@ -38,6 +40,7 @@ export default function AtlasAiExecutiveBrief({
     });
 
   useEffect(() => {
+    if (!viewerTimeZone) return;
     let active = true;
 
     async function loadBrief() {
@@ -45,7 +48,8 @@ export default function AtlasAiExecutiveBrief({
         const result =
           await fetchAtlasAiBrief(
             snapshot,
-            memory
+            memory,
+            viewerTimeZone
           );
 
         if (!active) {
@@ -67,7 +71,8 @@ export default function AtlasAiExecutiveBrief({
           brief:
             buildDeterministicAtlasBrief(
               snapshot,
-              memory
+              memory,
+              viewerTimeZone
             ),
           source: "rules",
         });
@@ -79,7 +84,7 @@ export default function AtlasAiExecutiveBrief({
     return () => {
       active = false;
     };
-  }, [snapshot, memory]);
+  }, [snapshot, memory, viewerTimeZone]);
 
   if (
     state.status === "ready" &&
