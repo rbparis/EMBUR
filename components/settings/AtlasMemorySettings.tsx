@@ -182,6 +182,7 @@ export default function AtlasMemorySettings() {
             </option>
           </select>
         </Field>
+        <p className="text-sm text-slate-500">Your selected contact method guides Atlas recommendations only. It does not initiate calls, texts, or emails.</p>
 
         <Field label="Morning brief length">
           <select

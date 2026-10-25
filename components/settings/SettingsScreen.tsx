@@ -3,51 +3,8 @@
 import { useEffect, useState } from "react";
 import EmburIcon from "@/components/ui/EmburIcon";
 
-type BusinessSettings = {
-  businessName: string;
-  businessPhone: string;
-  openingTime: string;
-  closingTime: string;
-  afterHoursFollowUp: boolean;
-  reviewRequests: boolean;
-  ownerNotifications: boolean;
-  appointmentConfirmations: boolean;
-};
-
-const defaultSettings: BusinessSettings = {
-  businessName: "",
-  businessPhone: "",
-  openingTime: "07:00",
-  closingTime: "18:00",
-  afterHoursFollowUp: false,
-  reviewRequests: false,
-  ownerNotifications: false,
-  appointmentConfirmations: false,
-};
-
-const storageKey = "embur-business-settings";
-
-function readStoredSettings(): BusinessSettings {
-  try {
-    const storedSettings = window.localStorage.getItem(storageKey);
-
-    if (!storedSettings) {
-      return defaultSettings;
-    }
-
-    const parsedSettings = JSON.parse(
-      storedSettings
-    ) as Partial<BusinessSettings>;
-
-    return {
-      ...defaultSettings,
-      ...parsedSettings,
-    };
-  } catch (error) {
-    console.error("Could not load EMBUR settings:", error);
-    return defaultSettings;
-  }
-}
+import Link from "next/link";
+import { defaultSettings, readLocalDraft, saveLocalDraft, type BusinessSettings } from "@/lib/settings/localDraft";
 
 export default function SettingsScreen() {
   const [settings, setSettings] =
@@ -61,11 +18,15 @@ export default function SettingsScreen() {
 
   useEffect(() => {
     const loadTimer = window.setTimeout(() => {
-      const storedSettings = readStoredSettings();
-
-      setSettings(storedSettings);
-      setSavedSettings(storedSettings);
-      setIsLoaded(true);
+      try {
+        const storedSettings = readLocalDraft(window.localStorage);
+        setSettings(storedSettings);
+        setSavedSettings(storedSettings);
+      } catch {
+        setSaveMessage("Could not save this local draft. Check your browser storage settings and try again.");
+      } finally {
+        setIsLoaded(true);
+      }
     }, 0);
 
     return () => {
@@ -94,37 +55,12 @@ export default function SettingsScreen() {
     setSaveMessage("");
   }
 
-  function toggleSetting(
-    field: keyof Pick<
-      BusinessSettings,
-      | "afterHoursFollowUp"
-      | "reviewRequests"
-      | "ownerNotifications"
-      | "appointmentConfirmations"
-    >
-  ) {
-    setSettings((current) => ({
-      ...current,
-      [field]: !current[field],
-    }));
-
-    setSaveMessage("");
-  }
-
   function saveSettings() {
-    if (!settings.businessName.trim()) {
-      setSaveMessage("Please enter your business name.");
-      return;
-    }
-
     try {
-      window.localStorage.setItem(
-        storageKey,
-        JSON.stringify(settings)
-      );
-
-      setSavedSettings(settings);
-      setSaveMessage("Your EMBUR settings have been saved.");
+      const draft = saveLocalDraft(window.localStorage, settings);
+      setSettings(draft);
+      setSavedSettings(draft);
+      setSaveMessage("Draft saved in this browser only. Your saved business profile and live services have not changed.");
 
       window.setTimeout(() => {
         setSaveMessage("");
@@ -132,7 +68,7 @@ export default function SettingsScreen() {
     } catch (error) {
       console.error("Could not save EMBUR settings:", error);
       setSaveMessage(
-        "We could not save your settings. Please try again."
+        "Could not save this local draft. Check your browser storage settings and try again."
       );
     }
   }
@@ -140,7 +76,7 @@ export default function SettingsScreen() {
   function resetSettings() {
     setSettings(defaultSettings);
     setSaveMessage(
-      "Defaults restored. Select Save Changes to keep them."
+      "Local draft reset. Select Save local draft to store these blank defaults."
     );
   }
 
@@ -150,16 +86,15 @@ export default function SettingsScreen() {
         <div className="flex flex-col gap-5 border-b border-slate-200 pb-6 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-sm font-bold uppercase tracking-wider text-blue-700">
-              Business controls
+              Local preferences
             </p>
 
             <h3 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
-              Settings
+              Draft preferences
             </h3>
 
             <p className="mt-2 max-w-2xl leading-relaxed text-slate-500">
-              Control how EMBUR represents your business, follows up
-              with customers, and keeps you informed.
+              These draft preferences are stored in this browser only. They do not update your saved business profile or activate any automated service.
             </p>
           </div>
 
@@ -176,9 +111,12 @@ export default function SettingsScreen() {
               }`}
             />
 
-            {hasChanges ? "Unsaved changes" : "Everything saved"}
+            {hasChanges ? "Unsaved local changes" : "No unsaved local changes"}
           </div>
         </div>
+
+        <p className="mt-5 rounded-xl bg-slate-100 p-4 text-sm text-slate-600">Local draft only. Information saved here stays in this browser and may not appear on another device. Automated services are not activated by these settings.</p>
+        <Link href="/app/onboarding" className="mt-4 inline-block font-semibold text-blue-700 underline">Edit saved business profile</Link>
 
         {!isLoaded ? (
           <SettingsLoading />
@@ -186,8 +124,8 @@ export default function SettingsScreen() {
           <>
             <div className="mt-8">
               <SettingsSectionHeader
-                title="Business profile"
-                description="The information EMBUR uses when representing your company."
+                title="Draft business details"
+                description="These fields are local notes only. To change the business name, phone, industry, or timezone stored in your EMBUR workspace, use Business setup."
               />
 
               <div className="mt-5 grid gap-5 md:grid-cols-2">
@@ -214,8 +152,8 @@ export default function SettingsScreen() {
 
             <div className="mt-10 border-t border-slate-200 pt-8">
               <SettingsSectionHeader
-                title="Operating hours"
-                description="EMBUR uses these hours to understand when your office is available."
+                title="Draft operating hours"
+                description="These hours are local notes only. They do not control calling, booking, or messaging."
               />
 
               <div className="mt-5 grid gap-5 sm:grid-cols-2">
@@ -241,54 +179,38 @@ export default function SettingsScreen() {
 
             <div className="mt-10 border-t border-slate-200 pt-8">
               <SettingsSectionHeader
-                title="Customer communication"
-                description="Choose which repetitive customer tasks EMBUR handles."
+                title="Non-live communication features"
+                description="These features are not live. Their controls are disabled and cannot activate communications."
               />
 
               <div className="mt-5 space-y-4">
                 <SettingToggle
-                  title="After-hours follow-up"
-                  description="Respond to missed opportunities when the office is closed."
-                  enabled={settings.afterHoursFollowUp}
-                  onToggle={() =>
-                    toggleSetting("afterHoursFollowUp")
-                  }
+                  title="After-hours follow-up — Not live"
+                  description="Automated follow-up is not available. This setting cannot send messages."
                 />
 
                 <SettingToggle
-                  title="Appointment confirmations"
-                  description="Confirm upcoming appointments and reduce preventable no-shows."
-                  enabled={settings.appointmentConfirmations}
-                  onToggle={() =>
-                    toggleSetting("appointmentConfirmations")
-                  }
+                  title="Appointment confirmations — Not live"
+                  description="Automated appointment confirmations are not available."
                 />
 
                 <SettingToggle
-                  title="Review requests"
-                  description="Ask satisfied customers for a review after completed jobs."
-                  enabled={settings.reviewRequests}
-                  onToggle={() =>
-                    toggleSetting("reviewRequests")
-                  }
+                  title="Review requests — Not live"
+                  description="Automated review requests are not available."
                 />
               </div>
             </div>
 
             <div className="mt-10 border-t border-slate-200 pt-8">
               <SettingsSectionHeader
-                title="Owner notifications"
-                description="Decide whether EMBUR should alert you when something needs attention."
+                title="Non-live notifications"
+                description="Automatic owner notifications are not live. The control below is disabled."
               />
 
               <div className="mt-5">
                 <SettingToggle
-                  title="Priority alerts"
-                  description="Notify you when a high-value or urgent customer needs a personal response."
-                  enabled={settings.ownerNotifications}
-                  onToggle={() =>
-                    toggleSetting("ownerNotifications")
-                  }
+                  title="Priority alerts — Not live"
+                  description="Automatic priority notifications are not available."
                 />
               </div>
             </div>
@@ -313,7 +235,7 @@ export default function SettingsScreen() {
                 onClick={resetSettings}
                 className="rounded-xl border bg-white px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-50"
               >
-                Restore Defaults
+                Reset local draft
               </button>
 
               <button
@@ -322,7 +244,7 @@ export default function SettingsScreen() {
                 disabled={!hasChanges}
                 className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {hasChanges ? "Save Changes" : "Changes Saved"}
+                {hasChanges ? "Save local draft" : "Local draft saved"}
               </button>
             </div>
           </>
@@ -331,16 +253,15 @@ export default function SettingsScreen() {
 
       <div className="rounded-3xl bg-gradient-to-br from-slate-950 to-blue-950 p-6 text-white shadow-lg md:p-8">
         <p className="text-sm font-bold uppercase tracking-wider text-blue-200">
-          Quietly working
+          Local draft only
         </p>
 
         <h3 className="mt-3 text-2xl font-bold">
-          EMBUR follows your rules.
+          These preferences do not operate live services.
         </h3>
 
         <p className="mt-3 max-w-2xl leading-relaxed text-slate-300">
-          These controls become the foundation for how EMBUR
-          communicates, prioritizes work, and protects your time.
+          This section stores reference preferences in your browser. It does not enable automated communications or change your saved business profile.
         </p>
       </div>
     </section>
@@ -389,8 +310,6 @@ function SettingToggle({
 }: {
   title: string;
   description: string;
-  enabled: boolean;
-  onToggle: () => void;
 }) {
   return (
     <div className="flex flex-col gap-5 rounded-2xl bg-slate-50 p-5 sm:flex-row sm:items-center sm:justify-between">
@@ -399,7 +318,6 @@ function SettingToggle({
 
         <p className="mt-1 text-sm leading-relaxed text-slate-500">
           {description}
-          <span className="ml-2 font-semibold">Not live</span>
         </p>
       </div>
 
@@ -408,7 +326,7 @@ function SettingToggle({
         role="switch"
         disabled
         aria-checked={false}
-        aria-label={`${title}: Not live`}
+        aria-label={title}
         className="relative h-8 w-14 shrink-0 rounded-full bg-slate-300 transition-colors duration-200"
       >
         <span

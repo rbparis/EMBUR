@@ -50,13 +50,13 @@ export default function MessagingConnectionCard() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#1555c6]">Customer texting</p>
-          <h3 className="font-display mt-3 text-2xl font-semibold text-[#06142f]">Twilio delivery with owner approval</h3>
+          <h3 className="font-display mt-3 text-2xl font-semibold text-[#06142f]">Text messaging setup — Not live</h3>
         </div>
         {badge && <span className={`rounded-full px-3 py-1.5 text-xs font-extrabold ${badge.color}`}>{badge.label}</span>}
       </div>
 
       <p className="mt-3 max-w-3xl leading-7 text-[#596a85]">
-        EMBUR prepares the response. A signed-in owner must approve each text before Twilio receives it. Consent and STOP requests are enforced before delivery.
+        SMS delivery is not live. Provider setup and compliance verification are required before live messaging is available.
       </p>
 
       {!status && !error && <p className="mt-5 text-sm font-semibold text-[#7188ad]">Checking the connection…</p>}

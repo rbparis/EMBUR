@@ -66,7 +66,7 @@ export default function ConversationsPage({
 
             <div className="mt-3 flex items-end justify-between gap-4">
               <h3 className="text-2xl font-bold tracking-tight text-slate-950">
-                Call desk
+                Conversation history
               </h3>
 
               <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700">
@@ -240,13 +240,11 @@ function ConversationThreadView({
       <footer className="border-t border-slate-200 bg-white p-5 md:p-6">
         <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4">
           <p className="text-sm font-bold uppercase tracking-wider text-blue-700">
-            EMBUR is connected
+            Conversation records available
           </p>
 
           <p className="mt-2 text-sm leading-relaxed text-blue-900">
-            Live replies and suggested responses will be
-            enabled when messaging is connected. This
-            thread is currently read-only.
+            Messaging is not live. This thread is a read-only record of customer interactions.
           </p>
         </div>
       </footer>
@@ -357,8 +355,7 @@ function ConversationEmpty() {
         </h3>
 
         <p className="mt-3 leading-relaxed text-slate-500">
-          New customer conversations will appear here
-          automatically when EMBUR begins responding.
+          Customer inquiries recorded through web intake will appear here.
         </p>
       </div>
     </section>

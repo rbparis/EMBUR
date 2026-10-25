@@ -18,6 +18,7 @@ export default function OperationsPage({ customers, onOpenCustomer }: { customer
   const value = customers.reduce((total, customer) => total + (customer.estimatedValue ?? (Number(customer.value.replace(/[^0-9]/g, "")) || 0)), 0);
   return (
     <div className="mt-8 space-y-6">
+      <p className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm leading-6 text-slate-600">Amounts and job statuses shown here come from customer records. Estimates are not verified payments or revenue collected by EMBUR. A booked status does not mean EMBUR automatically scheduled an appointment.</p>
       <section className="grid gap-4 md:grid-cols-3">
         <Metric label="Active opportunities" value={String(customers.filter((c) => !["paid", "lost"].includes(normalized(c.status))).length)} />
         <Metric label="Pipeline value" value={new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value)} />

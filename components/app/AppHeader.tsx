@@ -5,13 +5,13 @@ import EmburIcon from "@/components/ui/EmburIcon";
 import WorkspaceAccountControls from "@/components/app/WorkspaceAccountControls";
 
 const pageCopy: Record<AppPage, { eyebrow: string; title: string; description: string }> = {
-  Today: { eyebrow: "Today", title: "Money on the board.", description: "See the first move and the agents working behind it." },
+  Today: { eyebrow: "Today", title: "Your opportunity overview.", description: "Review customer records, priorities, and suggested next steps." },
   Leads: { eyebrow: "Leads", title: "People who can become jobs.", description: "Open the opportunity and move it forward." },
-  Calls: { eyebrow: "Calls", title: "Every customer heard.", description: "Review what came in and what EMBUR said." },
-  Jobs: { eyebrow: "Jobs", title: "Move the work. Get paid.", description: "Follow every opportunity from new to paid." },
-  Agents: { eyebrow: "Agents", title: "Your workforce at work.", description: "Approve the moves. Watch the numbers." },
-  Money: { eyebrow: "Money", title: "What came in. What is waiting.", description: "Revenue tied to real customers and jobs." },
-  Settings: { eyebrow: "Settings", title: "Set the rules.", description: "Voice, hours, approvals, billing, and account controls." },
+  Calls: { eyebrow: "Calls", title: "Customer conversations.", description: "Review stored inquiries and conversation history. Phone answering is not live." },
+  Jobs: { eyebrow: "Jobs", title: "Track your work from inquiry to outcome.", description: "Follow every opportunity from new to paid." },
+  Agents: { eyebrow: "Agents", title: "Available tools and non-live agents.", description: "Review recommendations and save your decisions." },
+  Money: { eyebrow: "Money", title: "What came in. What is waiting.", description: "Recorded opportunity values and job statuses." },
+  Settings: { eyebrow: "Settings", title: "Set the rules.", description: "Review business details, local preferences, and account settings." },
 };
 
 export default function AppHeader({ activePage, selectedCustomerName, onOpenAgents }: { activePage: AppPage; selectedCustomerName?: string; onOpenAgents: () => void }) {
@@ -23,7 +23,7 @@ export default function AppHeader({ activePage, selectedCustomerName, onOpenAgen
         <div>
           <div className="flex items-center gap-3">
             <p className="text-xs font-extrabold uppercase tracking-[0.19em] text-[#1555c6]">{selectedCustomerName ? "Customer 360" : copy.eyebrow}</p>
-            {!selectedCustomerName && <span className="hidden items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em] text-emerald-700 md:inline-flex"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />Live</span>}
+            {!selectedCustomerName && <span className="hidden items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em] text-slate-600 md:inline-flex">Workspace view</span>}
           </div>
           <h2 className="font-display mt-2 text-3xl font-semibold tracking-[-0.035em] text-[#06142f] md:text-4xl">{selectedCustomerName ?? copy.title}</h2>
           <p className="mt-2 text-[#66758d]">{selectedCustomerName ? "Complete customer context and the strongest next action." : copy.description}</p>
