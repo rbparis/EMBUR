@@ -145,6 +145,7 @@ export default function AtlasMemorySettings() {
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         <Field label="Owner name">
           <input
+            placeholder="Your name (optional)"
             value={memory.ownerName}
             onChange={(event) =>
               updateField(
@@ -181,6 +182,7 @@ export default function AtlasMemorySettings() {
             </option>
           </select>
         </Field>
+        <p className="text-sm text-slate-500">Your selected contact method guides Atlas recommendations only. It does not initiate calls, texts, or emails.</p>
 
         <Field label="Morning brief length">
           <select

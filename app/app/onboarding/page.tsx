@@ -3,6 +3,7 @@ import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import EmburLogo from "@/components/brand/EmburLogo";
+import WorkspaceAccountControls from "@/components/app/WorkspaceAccountControls";
 import { getFounderContext } from "@/lib/founderAccess.server";
 import { getClientWorkspaceForUser } from "@/lib/clientWorkspace.server";
 import { saveBusinessProfile } from "./actions";
@@ -37,9 +38,12 @@ export default async function OnboardingPage({ searchParams }: Props) {
       <div className="pointer-events-none fixed inset-0 embur-hero-grid opacity-40" />
       <div className="pointer-events-none fixed right-[-10rem] top-[-8rem] h-[34rem] w-[34rem] rounded-full bg-blue-500/20 blur-[110px]" />
       <div className="relative mx-auto max-w-5xl">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <Link href="/"><EmburLogo light /></Link>
-          <Link href="/app" className="rounded-full border border-white/15 px-4 py-2 text-sm font-bold text-slate-200 hover:bg-white/10">Workspace</Link>
+          <div className="ml-auto flex flex-wrap items-center justify-end gap-3">
+            <Link href="/app" className="rounded-full border border-white/15 px-4 py-2 text-sm font-bold text-slate-200 hover:bg-white/10">Workspace</Link>
+            <div className="flex items-center gap-2"><span className="text-sm font-semibold">Account</span><WorkspaceAccountControls /></div>
+          </div>
         </div>
 
         {complete === "1" ? (

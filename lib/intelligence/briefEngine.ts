@@ -1,3 +1,4 @@
+import { viewerGreeting } from "./viewerGreeting";
 import type { AtlasMemory } from "./memory/types";
 import { normalizeAtlasMemory } from "./memory/memoryEngine";
 import type { AtlasSnapshot } from "./types";
@@ -19,23 +20,10 @@ function formatCurrency(value: number): string {
   }).format(value);
 }
 
-function createGreeting(ownerName: string): string {
-  const hour = new Date().getHours();
-
-  if (hour < 12) {
-    return `Good morning, ${ownerName}.`;
-  }
-
-  if (hour < 18) {
-    return `Good afternoon, ${ownerName}.`;
-  }
-
-  return `Good evening, ${ownerName}.`;
-}
-
 export function createAtlasExecutiveBrief(
   snapshot: AtlasSnapshot,
-  memory?: AtlasMemory | null
+  memory?: AtlasMemory | null,
+  viewerTimeZone?: string
 ): AtlasExecutiveBrief {
   const atlasMemory = normalizeAtlasMemory(memory);
 
@@ -46,9 +34,7 @@ export function createAtlasExecutiveBrief(
   const priorityCustomer =
     snapshot.topPriority.customer;
 
-  const greeting = createGreeting(
-    atlasMemory.ownerName
-  );
+  const greeting = viewerGreeting(atlasMemory.ownerName, viewerTimeZone);
 
   const headline =
     actionCount === 0

@@ -24,7 +24,7 @@ export default function TodayPage({ customers, atlasMemory, onOpenCustomer, onOp
         <MoneyCard label="Pipeline" value={money(atlas.forecast.pipeline)} note="All open work" />
         <MoneyCard label="Money waiting" value={money(atlas.revenueAtRisk)} note="Needs action" hot />
         <MoneyCard label="Expected" value={money(atlas.forecast.expectedRevenue)} note="Weighted by likelihood" />
-        <MoneyCard label="Jobs moving" value={String(atlas.forecast.expectedAppointments)} note="Expected bookings" />
+        <MoneyCard label="Estimated appointments" value={String(atlas.forecast.expectedAppointments)} note="Forecast only — no automatic booking" />
       </section>
 
       <section className="relative overflow-hidden rounded-[2rem] bg-[#04112b] p-6 text-white shadow-xl md:p-9">

@@ -23,7 +23,7 @@ export default function AppSidebar({ activePage, onPageChange }: AppSidebarProps
       <div className="pointer-events-none absolute -left-24 top-16 h-72 w-72 rounded-full bg-blue-600/20 blur-[90px]" />
       <div className="relative flex items-center justify-between lg:block">
         <EmburLogo light />
-        <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#8fa5c6] lg:mt-5 lg:inline-flex">Agents online</span>
+        <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#8fa5c6] lg:mt-5 lg:inline-flex">Workspace tools</span>
       </div>
       <nav aria-label="EMBUR application" className="relative mt-6 flex gap-2 overflow-x-auto pb-2 lg:mt-10 lg:block lg:space-y-2 lg:overflow-visible lg:pb-0">
         {navigation.map((item) => {
@@ -38,9 +38,9 @@ export default function AppSidebar({ activePage, onPageChange }: AppSidebarProps
         })}
       </nav>
       <div className="embur-glass relative mt-auto hidden rounded-2xl p-4 lg:block">
-        <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-emerald-300 embur-soft-pulse" /><p className="text-xs font-bold uppercase tracking-wider text-emerald-200">Atlas online</p></div>
-        <p className="font-display mt-3 text-lg font-semibold">The business is covered.</p>
-        <p className="mt-2 text-sm leading-relaxed text-[#8297b8]">Calls, follow-up, referrals, and campaigns report here.</p>
+        <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-slate-400" /><p className="text-xs font-bold uppercase tracking-wider text-slate-300">Atlas suggestions</p></div>
+        <p className="font-display mt-3 text-lg font-semibold">Your next steps, organized.</p>
+        <p className="mt-2 text-sm leading-relaxed text-[#8297b8]">Review customer records and suggested next steps. Automated calling, outreach, and campaigns are not live.</p>
       </div>
     </aside>
   );

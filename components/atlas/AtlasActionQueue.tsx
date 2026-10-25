@@ -6,6 +6,7 @@ import {
 } from "react";
 import type { AtlasRecommendation } from "@/lib/intelligence/types";
 import type { Lead } from "@/types";
+import { reportedValueTotal } from "@/lib/intelligence/reportedOutcomes";
 import {
   fetchAtlasActions,
   saveAtlasAction,
@@ -183,24 +184,21 @@ export default function AtlasActionQueue({
     ).length;
 
   const storedActions = Object.values(actionState);
-  const recoveredRevenue = storedActions.reduce(
-    (total, action) => total + action.actualValue,
-    0
-  );
+  const recoveredRevenue = reportedValueTotal(storedActions);
   return (
     <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-orange-600">
-            Agent approvals
+            Atlas decisions
           </p>
 
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">
-            Moves waiting on you.
+            Suggested next steps
           </h2>
 
           <p className="mt-3 max-w-3xl leading-relaxed text-slate-600">
-            Approve it. The assigned agent takes it from there.
+            Save a decision for your records. EMBUR does not carry out the suggested action for you.
           </p>
         </div>
 
@@ -211,17 +209,19 @@ export default function AtlasActionQueue({
           />
 
           <QueueMetric
-            label="Approved"
+            label="Decisions saved"
             value={approvedCount}
           />
 
           <QueueMetric
-            label="Recovered"
+            label="Reported value"
             value={`$${recoveredRevenue.toLocaleString("en-US")}`}
           />
 
         </div>
       </div>
+
+      <p className="mt-4 text-sm text-slate-600">These values come from outcomes entered by workspace users. They are not independently verified revenue, payments, or time savings.</p>
 
       {loading ? (
         <p className="mt-8 font-semibold text-slate-500">
@@ -316,8 +316,8 @@ export default function AtlasActionQueue({
                           ? "Saving..."
                           : status ===
                               "approved"
-                            ? "Approved ✓"
-                            : "Approve"}
+                            ? "Decision saved"
+                            : "Save decision"}
                       </button>
 
                       <button
@@ -348,13 +348,13 @@ export default function AtlasActionQueue({
                           }
                           className="mb-4 rounded-xl border border-blue-300 bg-white px-5 py-3 font-bold text-blue-700 transition hover:bg-blue-50"
                         >
-                          Open customer and take action →
+                          Open customer record →
                         </button>
                       )}
 
                       <div className="grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
                       <label className="text-sm font-semibold text-slate-700">
-                        Revenue recovered
+                        Value reported by you
                         <input
                           type="number"
                           min="0"
@@ -372,7 +372,7 @@ export default function AtlasActionQueue({
                       </label>
 
                       <label className="text-sm font-semibold text-slate-700">
-                        Minutes saved
+                        Time saved reported by you
                         <input
                           type="number"
                           min="0"
@@ -395,7 +395,7 @@ export default function AtlasActionQueue({
                         onClick={() => recordOutcome(recommendation)}
                         className="self-end rounded-xl bg-green-700 px-5 py-3 font-bold text-white transition hover:bg-green-800 disabled:opacity-60"
                       >
-                        Record outcome
+                        Save reported outcome
                       </button>
                       </div>
                     </div>
@@ -403,9 +403,9 @@ export default function AtlasActionQueue({
 
                   {(status === "completed" || status === "recovered") && (
                     <div className="mt-5 flex flex-wrap gap-3 border-t border-green-200 pt-5 text-sm font-bold text-green-900">
-                      <span>${storedAction?.actualValue.toLocaleString("en-US") ?? "0"} recovered</span>
+                      <span>${storedAction?.actualValue.toLocaleString("en-US") ?? "0"} reported by you</span>
                       <span>•</span>
-                      <span>{formatTimeReturned(storedAction?.timeSavedMinutes ?? 0)} returned</span>
+                      <span>{formatTimeReturned(storedAction?.timeSavedMinutes ?? 0)} reported saved</span>
                     </div>
                   )}
                 </article>
@@ -475,7 +475,7 @@ function StatusBadge({
     <span
       className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ${styles[status]}`}
     >
-      {status}
+      {status === "approved" ? "DECISION SAVED" : status}
     </span>
   );
 }
